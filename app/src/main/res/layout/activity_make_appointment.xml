@@ -24,11 +24,39 @@
     <include layout="@layout/content_make_appointment" />
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
+        android:id="@+id/rec_float_button_make"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|start"
+        android:layout_margin="@dimen/fab_margin"
+        android:src="@drawable/alpha_mic"
+        android:onClick="startRecording"/>
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/play_float_button_make"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        android:src="@android:drawable/ic_dialog_email" />
+        android:src="@drawable/alpha_play"
+        android:onClick="startPlay"/>
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/stop_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:layout_margin="@dimen/fab_margin"
+        android:src="@drawable/alpha_stop"
+        android:visibility="invisible"
+        android:clickable="false"/>
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/stop_rec_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:layout_margin="@dimen/fab_margin"
+        android:src="@drawable/alpha_stop_mic"
+        android:visibility="invisible"
+        android:clickable="false"/>
+
 
 </android.support.design.widget.CoordinatorLayout>
