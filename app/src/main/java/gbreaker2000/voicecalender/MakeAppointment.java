@@ -1,5 +1,8 @@
 package gbreaker2000.voicecalender;
 
+import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.Bundle;
@@ -12,6 +15,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.Toast;
 
@@ -28,8 +32,18 @@ public class MakeAppointment extends AppCompatActivity {
     Button start_button, stop_button, play_button, cancel_button, save_button;
 
     //Recorder Variables
-    private MediaRecorder recorder = null;
-    MediaPlayer mPlayer = null;
+    private MediaRecorder recorder = new MediaRecorder();
+    MediaPlayer mPlayer = new MediaPlayer();
+    boolean recStatus = false;
+    FloatingActionButton rec_float_button_make;
+    FloatingActionButton play_float_button_make;
+    FloatingActionButton stop_image;
+    FloatingActionButton stop_rec_image;
+    boolean playStatus = false;
+    Drawable stopDrawable = null;
+    Drawable playDrawable = null;
+    Drawable recDrawable = null;
+    Drawable stopRecDrawable = null;
     //private int curFormat = 0;
     //private String fileExt[] = {".mp4", ".3gpp"};
     //private int opFormats[] = {MediaRecorder.OutputFormat.MPEG_4, MediaRecorder.OutputFormat.THREE_GPP};
@@ -43,14 +57,21 @@ public class MakeAppointment extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        Intent activityThatCalled = getIntent();
+        String previousActivity = activityThatCalled.getExtras().getString("PATH_NAME_MAIN");
+        file_location = (EditText)findViewById(R.id.file_location);
+        file_location.setText(previousActivity);
+        PATH_NAME = previousActivity;
+
+
+//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+//            }
+//        });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         tittle = (EditText)findViewById(R.id.tittle);
@@ -59,18 +80,33 @@ public class MakeAppointment extends AppCompatActivity {
         reminder = (EditText)findViewById(R.id.reminder);
         location = (EditText)findViewById(R.id.location);
         all_day = (Switch)findViewById(R.id.all_day);
-        start_button = (Button)findViewById(R.id.start_button);
-        stop_button = (Button)findViewById(R.id.stop_button);
-        play_button = (Button)findViewById(R.id.play_button);
+//        start_button = (Button)findViewById(R.id.start_button);
+//        stop_button = (Button)findViewById(R.id.stop_button);
+//        play_button = (Button)findViewById(R.id.play_button);
         save_button = (Button)findViewById(R.id.save_button);
         cancel_button = (Button)findViewById(R.id.cancel_button);
-        file_location = (EditText)findViewById(R.id.file_location);
+        rec_float_button_make = (FloatingActionButton)findViewById(R.id.rec_float_button_make);
+        play_float_button_make = (FloatingActionButton)findViewById(R.id.play_float_button_make);
+        stop_image = (FloatingActionButton)findViewById(R.id.stop_image);
+        stopDrawable = stop_image.getDrawable();
+        playDrawable = play_float_button_make.getDrawable();
+        recDrawable = rec_float_button_make.getDrawable();
+        stop_rec_image = (FloatingActionButton)findViewById(R.id.stop_rec_image);
+        stopRecDrawable = stop_rec_image.getDrawable();
+        rec_float_button_make.setBackgroundTintList(ColorStateList.valueOf(0xff0000ff));
+        play_float_button_make.setBackgroundTintList(ColorStateList.valueOf(0xff0000ff));
+
+
+
         //appointment_start.setText(MainActivity.getDate());
     }
 
     public void cancelAppoint(View view) {
-        Toast.makeText(getApplicationContext(),PATH_NAME, Toast.LENGTH_LONG).show();
-        tittle.setText("Cancel Button");
+        finish();
+//        Intent cancel = new Intent(this, MakeAppointment.class);
+//        startActivity(cancel);
+//        Toast.makeText(getApplicationContext(),PATH_NAME, Toast.LENGTH_LONG).show();
+//        tittle.setText("Cancel Button");
 
     }
 
@@ -81,20 +117,56 @@ public class MakeAppointment extends AppCompatActivity {
     public void startRecording(View view) {
         //Toast.makeText(getApplicationContext(),"Recording", Toast.LENGTH_LONG).show();
 
-        recorder = new MediaRecorder();
-        recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-        recorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
-        recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
-        PATH_NAME = getFilePath();
-        recorder.setOutputFile(PATH_NAME);
-        try{
-            recorder.prepare();
-            recorder.start();   // Recording is now started
+        if (!recStatus) {
+            recorder = new MediaRecorder();
+            recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+            recorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+            recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+            PATH_NAME = getFilePath();
+            recorder.setOutputFile(PATH_NAME);
+            try {
+
+                recorder.prepare();
+                recorder.start();   // Recording is now started
+
+
+//              Toast.makeText(this,"Recording",Toast.LENGTH_SHORT).show();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            recStatus = true;
+            rec_float_button_make.setBackgroundTintList(ColorStateList.valueOf(0xffff0000));
+//            rec_float_button_make.setImageDrawable(stopRecDrawable);
+//            start_button.setText("Stop Rec");
         }
-        catch(Exception e)
+        else
         {
-            e.printStackTrace();
+            recorder.stop();
+            recorder.reset();
+//            start_button.setText("Rec");
+            recStatus = false;
+            rec_float_button_make.setBackgroundTintList(ColorStateList.valueOf(0xff0000ff));
+//            rec_float_button_make.setImageDrawable(recDrawable);
+                    file_location.setText(PATH_NAME);
+//            Toast.makeText(this,"Recording Stopped",Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this,PATH_NAME,Toast.LENGTH_SHORT).show();
         }
+
+
+//        recorder = new MediaRecorder();
+//        recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+//        recorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+//        recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+//        PATH_NAME = getFilePath();
+//        recorder.setOutputFile(PATH_NAME);
+//        try{
+//            recorder.prepare();
+//            recorder.start();   // Recording is now started
+//        }
+//        catch(Exception e)
+//        {
+//            e.printStackTrace();
+//        }
 
         /*
         recorder = new MediaRecorder();
@@ -140,14 +212,29 @@ public class MakeAppointment extends AppCompatActivity {
     public void startPlay(View view) {
         //Toast.makeText(getApplicationContext(),"Play Button", Toast.LENGTH_LONG).show();
 
-        mPlayer = new MediaPlayer();
-        try {
-            mPlayer.setDataSource(PATH_NAME);
-            mPlayer.prepare();
-            mPlayer.start();
-        } catch (IOException e) {
-            //Log.e(LOG_TAG, "prepare() failed");
+//        mPlayer = new MediaPlayer();
+
+        if(!playStatus) {
+            mPlayer = new MediaPlayer();
+            try {
+                mPlayer.setDataSource(PATH_NAME);
+                mPlayer.prepare();
+                mPlayer.start();
+
+            } catch (IOException e) {
+                //Log.e(LOG_TAG, "prepare() failed");
+            }
+            play_float_button_make.setImageDrawable(stopDrawable);
+            playStatus = true;
         }
+        else
+        {
+            mPlayer.release();
+            mPlayer = null;
+            playStatus = false;
+            play_float_button_make.setImageDrawable(playDrawable);
+        }
+
     }
 
     //Recorder Helper Methods
@@ -164,4 +251,6 @@ public class MakeAppointment extends AppCompatActivity {
         mPlayer.release();
         mPlayer = null;
     }
+
+
 }
