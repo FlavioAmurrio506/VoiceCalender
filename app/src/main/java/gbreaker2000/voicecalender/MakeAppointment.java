@@ -44,6 +44,8 @@ public class MakeAppointment extends AppCompatActivity {
     Drawable playDrawable = null;
     Drawable recDrawable = null;
     Drawable stopRecDrawable = null;
+    Appointment[] appointment = new Appointment[100];
+    public static int appointmentIndex = 0;
     //private int curFormat = 0;
     //private String fileExt[] = {".mp4", ".3gpp"};
     //private int opFormats[] = {MediaRecorder.OutputFormat.MPEG_4, MediaRecorder.OutputFormat.THREE_GPP};
@@ -111,7 +113,19 @@ public class MakeAppointment extends AppCompatActivity {
     }
 
     public void saveAppoint(View view) {
-        Toast.makeText(getApplicationContext(),"Save Button", Toast.LENGTH_LONG).show();
+        appointment[appointmentIndex] = new Appointment();
+        appointment[appointmentIndex].setTittle(tittle.getText().toString());
+        appointment[appointmentIndex].setStartDate(appointment_start.getText().toString());
+        appointment[appointmentIndex].setStartTime(appointment_start.getText().toString());
+        appointment[appointmentIndex].setEndDate(appointment_end.getText().toString());
+        appointment[appointmentIndex].setEndTime(appointment_end.getText().toString());
+        appointment[appointmentIndex].setAllDay(all_day.isChecked());
+        appointment[appointmentIndex].setFileName(PATH_NAME);
+        appointment[appointmentIndex].setLocation(location.getText().toString());
+        Intent save = new Intent(this,MainActivity.class);
+        this.appointmentIndex++;
+        startActivity(save);
+        Toast.makeText(getApplicationContext(),"Save Button " + appointmentIndex, Toast.LENGTH_LONG).show();
     }
 
     public void startRecording(View view) {

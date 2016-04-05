@@ -166,5 +166,6 @@ public class MainActivity extends AppCompatActivity {
     public void showCurrentDate(View view) {
         Intent today = new Intent(this,MainActivity.class);
         startActivity(today);
+        Toast.makeText(this,"Current Date",Toast.LENGTH_SHORT).show();
     }
 }
