@@ -20,7 +20,9 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -37,6 +39,8 @@ public class MainActivity extends AppCompatActivity {
     NotificationManager notificationManager;
     int notifID = 33;
     boolean isNotificActive = false;
+    FileIO read = new FileIO();
+    public static List<Appointment> appdata = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +54,12 @@ public class MainActivity extends AppCompatActivity {
         rec_float_button.setBackgroundTintList(ColorStateList.valueOf(0xff0000ff));
         today_button.setBackgroundTintList(ColorStateList.valueOf(0xff0000ff));
         add_float_Button.setBackgroundTintList(ColorStateList.valueOf(0xff0000ff));
+
+        appdata.clear();
+
+        appdata.addAll(read.FileInput());
+        Toast.makeText(this,("File Read" + appdata.size() + ""),Toast.LENGTH_SHORT).show();
+
 
 
 //        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);

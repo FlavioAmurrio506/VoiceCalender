@@ -53,7 +53,8 @@
             android:layout_height="wrap_content"
             android:inputType="textAutoCorrect"
 
-            android:id="@+id/tittle" />
+            android:id="@+id/tittle"
+            android:hint="Place Tittle Here"/>
 
     </LinearLayout>
     <LinearLayout
@@ -74,12 +75,13 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Start" />
+            android:text="Start Date" />
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="date"
-            android:id="@+id/appointment_start"/>
+            android:id="@+id/appointment_start"
+            android:hint="Touch Here to select date"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -88,12 +90,16 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="End"/>
+            android:text="Start Time"/>
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="date"
-            android:id="@+id/appointment_end"/>
+            android:id="@+id/appointment_end"
+            android:hint="Touch Here to select time"/>
+        <!-- Change Name Above Later-->
+
+
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -102,12 +108,13 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Reminder"/>
+            android:text="Notes"/>
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="text"
-            android:id="@+id/reminder"/>
+            android:id="@+id/reminder"
+            android:hint="Write Notes Here"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -121,7 +128,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPostalAddress"
-            android:id="@+id/location"/>
+            android:id="@+id/location"
+            android:hint="Address"/>
 
 
     </LinearLayout>
@@ -135,7 +143,8 @@
         <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/file_location"/>
+            android:id="@+id/file_location"
+            android:hint="No Voice Recording Yet!!!"/>
         <!--android:layout_width="wrap_content"-->
         <!--android:layout_height="wrap_content"-->
         <!--android:text="File Location"-->

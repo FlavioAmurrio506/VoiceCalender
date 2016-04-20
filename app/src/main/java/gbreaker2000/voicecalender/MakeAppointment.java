@@ -1,6 +1,7 @@
 package gbreaker2000.voicecalender;
 
 import android.app.AlarmManager;
+import android.app.FragmentTransaction;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -108,6 +109,54 @@ public class MakeAppointment extends AppCompatActivity {
         //appointment_start.setText(MainActivity.getDate());
     }
 
+    @Override
+    public void onStart(){
+        super.onStart();
+
+        EditText appointment_start=(EditText)findViewById(R.id.appointment_start);
+        appointment_start.setOnFocusChangeListener(new View.OnFocusChangeListener(){
+            public void onFocusChange(View view, boolean hasfocus){
+                if(hasfocus){
+                    DateDialog dialog=new DateDialog(view);
+                    FragmentTransaction ft =getFragmentManager().beginTransaction();
+                    dialog.show(ft, "DatePicker");
+
+                }
+            }
+
+        });
+
+        EditText appointment_end = (EditText)findViewById(R.id.appointment_end);
+        appointment_end.setOnFocusChangeListener(new View.OnFocusChangeListener(){
+            public void onFocusChange(View view, boolean hasfocus){
+                if(hasfocus){
+                    TimeDialog dialog = TimeDialog.newInstance(view);
+                    android.support.v4.app.FragmentTransaction ft =getSupportFragmentManager().beginTransaction();
+                    dialog.show(ft, "TimeDialog");
+
+                }
+            }
+
+        });
+    }
+
+//    public void onStart(){
+//        super.onStart();
+//
+//        EditText appointment_end = (EditText)findViewById(R.id.appointment_end);
+//        appointment_end.setOnFocusChangeListener(new View.OnFocusChangeListener(){
+//            public void onFocusChange(View view, boolean hasfocus){
+//                if(hasfocus){
+//                    TimeDialog dialog = TimeDialog.newInstance(view);
+//                    android.support.v4.app.FragmentTransaction ft =getSupportFragmentManager().beginTransaction();
+//                    dialog.show(ft, "TimeDialog");
+//
+//                }
+//            }
+//
+//        });
+//    }
+
     public void cancelAppoint(View view) {
         finish();
 //        Intent cancel = new Intent(this, MakeAppointment.class);
@@ -118,6 +167,23 @@ public class MakeAppointment extends AppCompatActivity {
     }
 
     public void saveAppoint(View view) {
+
+        Appointment tempsave = new Appointment();
+        tempsave.setTittle(tittle.getText().toString());
+        tempsave.setStartDate(appointment_start.getText().toString());
+        tempsave.setStartTime(appointment_end.getText().toString());
+        //tempsave.setEndDate(appointment_end.getText().toString());
+        tempsave.setEndDate(null);
+        tempsave.setEndTime(null);
+        //tempsave.setEndTime(appointment_end.getText().toString());
+        tempsave.setAllDay(all_day.isChecked());
+        tempsave.setFileName(PATH_NAME);
+        tempsave.setLocation(location.getText().toString());
+
+        MainActivity.appdata.add(tempsave);
+        FileIO fileio = new FileIO();
+        fileio.FileOutput(MainActivity.appdata);
+
 //        Long alertTime = new GregorianCalendar().getTimeInMillis()+5*1000;
 //        Intent alertIntent = new Intent(this, AlertReceiver.class);
 //        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
@@ -126,20 +192,20 @@ public class MakeAppointment extends AppCompatActivity {
 //                        PendingIntent.FLAG_UPDATE_CURRENT));
 
 
-
-        appointment[appointmentIndex] = new Appointment();
-        appointment[appointmentIndex].setTittle(tittle.getText().toString());
-        appointment[appointmentIndex].setStartDate(appointment_start.getText().toString());
-        appointment[appointmentIndex].setStartTime(appointment_start.getText().toString());
-        appointment[appointmentIndex].setEndDate(appointment_end.getText().toString());
-        appointment[appointmentIndex].setEndTime(appointment_end.getText().toString());
-        appointment[appointmentIndex].setAllDay(all_day.isChecked());
-        appointment[appointmentIndex].setFileName(PATH_NAME);
-        appointment[appointmentIndex].setLocation(location.getText().toString());
+//
+//        appointment[appointmentIndex] = new Appointment();
+//        appointment[appointmentIndex].setTittle(tittle.getText().toString());
+//        appointment[appointmentIndex].setStartDate(appointment_start.getText().toString());
+//        appointment[appointmentIndex].setStartTime(appointment_start.getText().toString());
+//        appointment[appointmentIndex].setEndDate(appointment_end.getText().toString());
+//        appointment[appointmentIndex].setEndTime(appointment_end.getText().toString());
+//        appointment[appointmentIndex].setAllDay(all_day.isChecked());
+//        appointment[appointmentIndex].setFileName(PATH_NAME);
+//        appointment[appointmentIndex].setLocation(location.getText().toString());
         Intent save = new Intent(this,MainActivity.class);
-        this.appointmentIndex++;
+        //this.appointmentIndex++;
         startActivity(save);
-        Toast.makeText(getApplicationContext(),"Save Button " + appointmentIndex, Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(),"Save Button " + MainActivity.appdata.size(), Toast.LENGTH_LONG).show();
     }
 
     public void startRecording(View view) {
@@ -279,6 +345,8 @@ public class MakeAppointment extends AppCompatActivity {
         mPlayer.release();
         mPlayer = null;
     }
+
+
 
 
 }

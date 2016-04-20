@@ -1,8 +1,5 @@
 package gbreaker2000.voicecalender;
 
-/**
- * Created by Flavi on 4/2/2016.
- */
 public class Appointment {
 
     private String tittle;
@@ -14,7 +11,7 @@ public class Appointment {
     private String location;
     private boolean allDay;
 
-    Appointment()
+    public Appointment()
     {
         tittle = "Place Tittle Here";
         startDate = "Start Date";

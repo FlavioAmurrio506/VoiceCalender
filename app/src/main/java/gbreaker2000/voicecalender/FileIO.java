@@ -1,47 +1,34 @@
 package gbreaker2000.voicecalender;
 
+import android.os.Environment;
+
 import java.io.BufferedReader;
 import java.io.DataInputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Flavi on 4/17/2016.
  */
 public class FileIO {
-    public static String[][] FileInput()
+    public static List<Appointment> FileInput()
     {
-        String [][] tempArray = new String[115][11];
+        List<Appointment> inputData = new ArrayList<>();
         try
         {
-
-
-            FileInputStream fstream = new FileInputStream("CustomerAccounts.txt");
-            // Get the object of DataInputStream
-
+            FileInputStream fstream = new FileInputStream(getFilePathData());
             DataInputStream in = new DataInputStream(fstream);
             BufferedReader br = new BufferedReader(new InputStreamReader(in));
             String strLine;
 
-            //String [][] tempArray = new String[20][8];
-            //Read File Line By Line
-
-            int r = 0;
-
             while ((strLine = br.readLine()) != null)
             {
-                //Split the string into an array
-                String[] delims = strLine.split(",");
-                //Loop will assign new the split line into the array
-
-                for (int c = 0; c < tempArray[r].length; c++)
-                {
-                    tempArray[r][c] = delims[c];
-                }
-
-                r++;
+                inputData.add(stringToAppointment(strLine));
             }
         }
 
@@ -50,61 +37,59 @@ public class FileIO {
             //Catch exception if any
             System.err.println("Error: " + e.getMessage());
         }
-        //System.out.println("studentlist.txt has been modified saved as output.txt");
-
-        return tempArray;
+        return inputData;
     }//End FileInput Method
 
-
-    public static void printArray(String [][] array)
+    public static Appointment stringToAppointment(String data)
     {
-        String [][] tempArray = array;
-        System.out.println("Index\tAccNum\t\tName\t\tLastName\t\tSSN\t\tDOB\t\tAddress\t\tCity\t\tZipCode\t\tChecking\t\tSaving");
-        for (int i = 0; i < tempArray.length; i++)
-        {
-            for (int j = 0; j < tempArray[i].length; j++)
-            {
-                System.out.print(" " + tempArray[i][j] + "\t");
-            }
+        String[] parts = data.split(",");
+        Appointment tempApp = new Appointment();
+        tempApp.setTittle(parts[0]);
+        tempApp.setStartDate(parts[1]);
+        tempApp.setStartTime(parts[2]);
+        tempApp.setEndDate(parts[3]);
+        tempApp.setEndTime(parts[4]);
+        tempApp.setFileName(parts[5]);
+        tempApp.setLocation(parts[6]);
+        tempApp.setAllDay(Boolean.parseBoolean(parts[7]));
+        return tempApp;
+    }
 
-            System.out.println(" ");
-        }
-    }// end printArray
-
-
-    public static void FileOutput(String[][] array)
+    public static void FileOutput(List<Appointment> outdata)
     {
-        String fileName = "Appointments.txt";
-        String [][] temp = array;
+        String fileName = getFilePathData();
+        //String [][] temp = array;
         PrintWriter outputStream = null;
 
         try
         {
             outputStream = new PrintWriter(fileName);// create  the file
         }
-
         catch (FileNotFoundException e)
         {
             System.out.println ("Error opening the file " + fileName);// if there is  no possible to create  the file
             System.exit (0);
         }
-
-        //Change to For loop
-
-        for (int i = 0; i < temp.length; i++)
+        for (int i = 0; i < outdata.size(); i++)
         {
-            for (int j = 0; j < ((temp[i].length)-1); j++)
-            {
-                outputStream.print(temp[i][j] + ",");
-            }
-
-            outputStream.println(temp[i][10]);
-            //outputStream.println("\n");
+            outputStream.print(outdata.get(i).getTittle() + "," + outdata.get(i).getStartDate() + "," +
+                    outdata.get(i).getStartTime() + "," + outdata.get(i).getEndDate() + "," +
+                    outdata.get(i).getEndTime() + "," + outdata.get(i).getFileName() + "," +
+                    outdata.get(i).getLocation() + "," );
+            outputStream.println(outdata.get(i).isAllDay());
         }//end for loop
-
         outputStream.close();// close the file
-        System.out.println("Those lines were written to " + fileName);
+        //System.out.println("Those lines were written to " + fileName);
 
     }//End FileOutput Method
+
+    private static String getFilePathData()
+    {
+        String filePath = Environment.getExternalStorageDirectory().getPath();
+        File file = new File(filePath,"VoiceCalendarAudio");
+        if(!file.exists())
+            file.mkdir();
+        return(file.getAbsolutePath() + "/" + "appointdata.txt");
+    }
 
 }//End FileIO Class
