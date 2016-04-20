@@ -1,5 +1,8 @@
 package gbreaker2000.voicecalender;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
@@ -21,6 +24,8 @@ import android.widget.Toast;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 public class MakeAppointment extends AppCompatActivity {
 
@@ -113,6 +118,15 @@ public class MakeAppointment extends AppCompatActivity {
     }
 
     public void saveAppoint(View view) {
+        Long alertTime = new GregorianCalendar().getTimeInMillis()+5*1000;
+        Intent alertIntent = new Intent(this, AlertReceiver.class);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, alertTime,
+                PendingIntent.getBroadcast(this, 1, alertIntent,
+                        PendingIntent.FLAG_UPDATE_CURRENT));
+
+
+
         appointment[appointmentIndex] = new Appointment();
         appointment[appointmentIndex].setTittle(tittle.getText().toString());
         appointment[appointmentIndex].setStartDate(appointment_start.getText().toString());

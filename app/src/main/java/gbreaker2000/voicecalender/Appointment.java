@@ -89,4 +89,17 @@ public class Appointment {
     public void setAllDay(boolean allDay) {
         this.allDay = allDay;
     }
+    public String[] toArray()
+    {
+        String[] appointmentInfo = new String[8];
+        appointmentInfo[0] = this.getTittle();
+        appointmentInfo[1] = this.getStartDate();
+        appointmentInfo[2] = this.getStartTime();
+        appointmentInfo[3] = this.getEndDate();
+        appointmentInfo[4] = this.getEndTime();
+        appointmentInfo[5] = this.getFileName();
+        appointmentInfo[6] = this.getLocation();
+        appointmentInfo[7] = String.valueOf(this.isAllDay());
+        return appointmentInfo;
+    }
 }

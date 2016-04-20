@@ -4,4 +4,5 @@
     <string name="title_activity_make_appointment">MakeAppointment</string>
     <string name="title_activity_audio_record_test">AudioRecordTest</string>
     <string name="title_activity_appointment_view">AppointmentView</string>
+    <string name="title_activity_alert_receiver">AlertReceiver</string>
 </resources>

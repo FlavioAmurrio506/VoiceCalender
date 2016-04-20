@@ -2,10 +2,16 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="gbreaker2000.voicecalender">
 
+    <uses-sdk
+        android:minSdkVersion="15"
+        android:targetSdkVersion="15" />
+
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-sdk android:minSdkVersion="15"
-        android:targetSdkVersion="15" />
+
+    <android:uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <android:uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <android:uses-permission android:name="com.android.alarm.permission.SET_ALARM"/>
 
     <application
         android:allowBackup="true"
@@ -50,6 +56,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="gbreaker2000.voicecalender.MainActivity" />
         </activity>
+        <activity
+            android:name=".AlertReceiver"
+            android:label="@string/title_activity_alert_receiver"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

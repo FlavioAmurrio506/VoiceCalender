@@ -1,5 +1,6 @@
 package gbreaker2000.voicecalender;
 
+import android.app.NotificationManager;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.media.MediaRecorder;
@@ -33,6 +34,9 @@ public class MainActivity extends AppCompatActivity {
     FloatingActionButton today_button;
     FloatingActionButton add_float_Button;
     boolean recStatus = false;
+    NotificationManager notificationManager;
+    int notifID = 33;
+    boolean isNotificActive = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -53,7 +53,7 @@
             android:layout_height="wrap_content"
             android:inputType="textAutoCorrect"
 
-            android:id="@+id/tittle"/>
+            android:id="@+id/tittle" />
 
     </LinearLayout>
     <LinearLayout
