@@ -29,6 +29,18 @@ public class TimeDialog extends DialogFragment implements TimePickerDialog.OnTim
 
 
     public void onTimeSet(TimePicker picker,int hour, int minute){
-        appointment_end.setText(hour+":"+minute);
+
+        String min = minute + "";
+        if(min.equals("0"))
+        {
+            min = "00";
+        } else if (minute < 10) {
+            min = "0" + minute;
+        }
+        else
+        {
+            min = minute + "";
+        }
+        appointment_end.setText(hour + ":" + min);
     }
 }

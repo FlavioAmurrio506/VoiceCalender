@@ -51,7 +51,8 @@ public class FileIO {
         tempApp.setEndTime(parts[4]);
         tempApp.setFileName(parts[5]);
         tempApp.setLocation(parts[6]);
-        tempApp.setAllDay(Boolean.parseBoolean(parts[7]));
+        tempApp.setNotes(parts[7]);
+        tempApp.setAllDay(Boolean.parseBoolean(parts[8]));
         return tempApp;
     }
 
@@ -75,7 +76,7 @@ public class FileIO {
             outputStream.print(outdata.get(i).getTittle() + "," + outdata.get(i).getStartDate() + "," +
                     outdata.get(i).getStartTime() + "," + outdata.get(i).getEndDate() + "," +
                     outdata.get(i).getEndTime() + "," + outdata.get(i).getFileName() + "," +
-                    outdata.get(i).getLocation() + "," );
+                    outdata.get(i).getLocation() + "," + outdata.get(i).getNotes() + ",");
             outputStream.println(outdata.get(i).isAllDay());
         }//end for loop
         outputStream.close();// close the file

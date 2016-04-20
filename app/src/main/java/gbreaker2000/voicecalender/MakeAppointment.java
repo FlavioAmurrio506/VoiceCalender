@@ -173,12 +173,13 @@ public class MakeAppointment extends AppCompatActivity {
         tempsave.setStartDate(appointment_start.getText().toString());
         tempsave.setStartTime(appointment_end.getText().toString());
         //tempsave.setEndDate(appointment_end.getText().toString());
-        tempsave.setEndDate(null);
-        tempsave.setEndTime(null);
+        //tempsave.setEndDate(null);
+        //tempsave.setEndTime(null);
         //tempsave.setEndTime(appointment_end.getText().toString());
         tempsave.setAllDay(all_day.isChecked());
         tempsave.setFileName(PATH_NAME);
         tempsave.setLocation(location.getText().toString());
+        tempsave.setNotes(reminder.getText().toString());
 
         MainActivity.appdata.add(tempsave);
         FileIO fileio = new FileIO();

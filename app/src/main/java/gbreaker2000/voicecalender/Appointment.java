@@ -9,26 +9,44 @@ public class Appointment {
     private String endTime;
     private String fileName;
     private String location;
+    private String notes;
     private boolean allDay;
 
     public Appointment()
     {
         tittle = "Place Tittle Here";
-        startDate = "Start Date";
-        startTime = "Start Time";
-        endDate = "End Date";
-        endTime = "End Time";
-        fileName = null;
-        location = null;
+        startDate = "01/01/1970";
+        startTime = "0:00";
+        endDate = "01/01/1970";
+        endTime = "0:00";
+        fileName = "";
+        location = "";
+        notes = "";
         allDay = false;
     }
+
+
+    public String getNotes() {
+        return notes;
+    }
+
+
+
+
 
     public String getTittle() {
         return tittle;
     }
 
     public void setTittle(String tittle) {
-        this.tittle = tittle;
+        if(!tittle.equals(""))
+        {
+            this.tittle = tittle;
+        }
+        else
+        {
+            this.tittle = "Temp Tittle";
+        }
     }
 
     public String getStartDate() {
@@ -36,7 +54,10 @@ public class Appointment {
     }
 
     public void setStartDate(String startDate) {
-        this.startDate = startDate;
+        if (!startDate.equals(""))
+        {
+            this.startDate = startDate;
+        }
     }
 
     public String getStartTime() {
@@ -44,7 +65,10 @@ public class Appointment {
     }
 
     public void setStartTime(String startTime) {
-        this.startTime = startTime;
+        if(!startTime.equals(""))
+        {
+            this.startTime = startTime;
+        }
     }
 
     public String getEndDate() {
@@ -52,7 +76,10 @@ public class Appointment {
     }
 
     public void setEndDate(String endDate) {
-        this.endDate = endDate;
+        if(!endDate.equals(""))
+        {
+            this.endDate = endDate;
+        }
     }
 
     public String getEndTime() {
@@ -60,7 +87,10 @@ public class Appointment {
     }
 
     public void setEndTime(String endTime) {
-        this.endTime = endTime;
+        if(!endTime.equals(""))
+        {
+            this.endTime = endTime;
+        }
     }
 
     public String getFileName() {
@@ -68,7 +98,10 @@ public class Appointment {
     }
 
     public void setFileName(String fileName) {
-        this.fileName = fileName;
+        if(!fileName.equals(""))
+        {
+            this.fileName = fileName;
+        }
     }
 
     public String getLocation() {
@@ -76,7 +109,10 @@ public class Appointment {
     }
 
     public void setLocation(String location) {
-        this.location = location;
+        if(!location.equals(""))
+        {
+            this.location = location;
+        }
     }
 
     public boolean isAllDay() {
@@ -86,17 +122,11 @@ public class Appointment {
     public void setAllDay(boolean allDay) {
         this.allDay = allDay;
     }
-    public String[] toArray()
-    {
-        String[] appointmentInfo = new String[8];
-        appointmentInfo[0] = this.getTittle();
-        appointmentInfo[1] = this.getStartDate();
-        appointmentInfo[2] = this.getStartTime();
-        appointmentInfo[3] = this.getEndDate();
-        appointmentInfo[4] = this.getEndTime();
-        appointmentInfo[5] = this.getFileName();
-        appointmentInfo[6] = this.getLocation();
-        appointmentInfo[7] = String.valueOf(this.isAllDay());
-        return appointmentInfo;
+
+    public void setNotes(String notes) {
+        if(!notes.equals(""))
+        {
+            this.notes = notes;
+        }
     }
 }
