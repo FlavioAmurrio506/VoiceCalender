@@ -118,12 +118,12 @@ public class MakeAppointment extends AppCompatActivity {
     }
 
     public void saveAppoint(View view) {
-        Long alertTime = new GregorianCalendar().getTimeInMillis()+5*1000;
-        Intent alertIntent = new Intent(this, AlertReceiver.class);
-        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, alertTime,
-                PendingIntent.getBroadcast(this, 1, alertIntent,
-                        PendingIntent.FLAG_UPDATE_CURRENT));
+//        Long alertTime = new GregorianCalendar().getTimeInMillis()+5*1000;
+//        Intent alertIntent = new Intent(this, AlertReceiver.class);
+//        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+//        alarmManager.set(AlarmManager.RTC_WAKEUP, alertTime,
+//                PendingIntent.getBroadcast(this, 1, alertIntent,
+//                        PendingIntent.FLAG_UPDATE_CURRENT));
 
 
 
