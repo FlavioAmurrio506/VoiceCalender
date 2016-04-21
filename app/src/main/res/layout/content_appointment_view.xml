@@ -14,70 +14,43 @@
     android:orientation="vertical"
     android:weightSum="1">
 
-    <RadioButton
-        android:layout_width="wrap_content"
+    <Button
+        android:id="@+id/app_but1"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="New RadioButton"
-        android:id="@+id/radioButton"
-        android:layout_gravity="center_horizontal" />
-
+        android:clickable="false"
+        android:text="Appointment 1"/>
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
+        android:id="@+id/app_but2"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="New Button"
-        android:id="@+id/button"
-        android:layout_gravity="center_horizontal" />
-
+        android:clickable="false"
+        android:text="Appointment 2"/>
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <Button
-        android:layout_width="wrap_content"
+        android:id="@+id/app_but3"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="New Button"
-        android:id="@+id/button2"
-        android:layout_gravity="center_horizontal" />
-
-    <ProgressBar
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="319dp"
+        android:clickable="false"
+        android:text="Appointment 3"/>
+    <Button
+        android:id="@+id/app_but4"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/progressBar2"
-        android:layout_gravity="right" />
-
+        android:clickable="false"
+        android:text="Appointment 4"/>
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <ProgressBar
-        style="?android:attr/progressBarStyleSmall"
-        android:layout_width="260dp"
+        android:id="@+id/app_but5"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/progressBar"
-        android:layout_gravity="center_horizontal"
-        android:layout_weight="1.82" />
-
+        android:clickable="false"
+        android:text="Appointment 5"/>
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:id="@+id/app_but6"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="false"
+        android:text="Appointment 6"/>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
 
 
 

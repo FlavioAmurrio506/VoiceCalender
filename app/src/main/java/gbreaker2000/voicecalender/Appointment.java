@@ -1,6 +1,9 @@
 package gbreaker2000.voicecalender;
 
-public class Appointment {
+import java.util.Calendar;
+import java.util.Date;
+
+public class Appointment implements Comparable<Appointment>{
 
     private String tittle;
     private String startDate;
@@ -11,6 +14,8 @@ public class Appointment {
     private String location;
     private String notes;
     private boolean allDay;
+    private long milliTime = 0;
+    private Date curDate = new Date();
 
     public Appointment()
     {
@@ -23,6 +28,7 @@ public class Appointment {
         location = "";
         notes = "";
         allDay = false;
+        //curAppoint = new Date();
     }
 
 
@@ -57,6 +63,7 @@ public class Appointment {
         if (!startDate.equals(""))
         {
             this.startDate = startDate;
+            setMilliSec();
         }
     }
 
@@ -68,6 +75,7 @@ public class Appointment {
         if(!startTime.equals(""))
         {
             this.startTime = startTime;
+            setMilliSec();
         }
     }
 
@@ -128,5 +136,47 @@ public class Appointment {
         {
             this.notes = notes;
         }
+    }
+    public static String dateToString(int year, int month, int day)
+    {
+        Date curDate = new Date (year, month, day);
+        return curDate.toString();
+    }
+    public void setMilliSec()
+    {
+        int year;
+        int month ;
+        int day;
+        int hour;
+        int minute;
+        String[] tempdate = this.getStartDate().split("/");
+        month = Integer.parseInt(tempdate[0]);
+        day = Integer.parseInt(tempdate[1]);
+        year = Integer.parseInt(tempdate[2]);
+        String[] tempHour = this.getStartTime().split(":");
+        hour = Integer.parseInt(tempHour[0]);
+        minute = Integer.parseInt(tempHour[1]);
+        Date cal = new Date(year-1900, month-1, day);
+        cal.setHours(hour);
+        cal.setMinutes(minute);
+
+        this.curDate = cal;
+        this.milliTime = cal.getTime();
+
+    }
+
+    public Date getCurDate() {
+        return curDate;
+    }
+
+    public long getMilliTime() {
+        return milliTime;
+    }
+
+    @Override
+    public int compareTo(Appointment compApp) {
+        long comparemilli = compApp.getMilliTime();
+
+        return (int)((this.getMilliTime() - comparemilli)/(1000*60));
     }
 }

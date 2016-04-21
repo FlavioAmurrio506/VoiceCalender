@@ -1,11 +1,15 @@
 package gbreaker2000.voicecalender;
 
+import android.app.AlarmManager;
 import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
+import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.SystemClock;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -22,6 +26,7 @@ import android.widget.Toast;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -41,6 +46,8 @@ public class MainActivity extends AppCompatActivity {
     boolean isNotificActive = false;
     FileIO read = new FileIO();
     public static List<Appointment> appdata = new ArrayList<>();
+    final static int RQS_1 = 1;
+    public static AlarmManager alarmManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +66,8 @@ public class MainActivity extends AppCompatActivity {
 
         appdata.addAll(read.FileInput());
         Toast.makeText(this,("File Read" + appdata.size() + ""),Toast.LENGTH_SHORT).show();
+        Date actualTime = new Date(System.currentTimeMillis());
+        Toast.makeText(this,"Current Time" + actualTime.toString(),Toast.LENGTH_SHORT).show();
 
 
 
@@ -178,7 +187,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void showCurrentDate(View view) {
-        Intent today = new Intent(this,MainActivity.class);
+
+
+        Intent today = new Intent(this,AppointmentView.class);
         startActivity(today);
         Toast.makeText(this,"Current Date",Toast.LENGTH_SHORT).show();
     }
