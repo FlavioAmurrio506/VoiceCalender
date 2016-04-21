@@ -10,6 +10,7 @@ import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -37,6 +38,7 @@ public class FileIO {
             //Catch exception if any
             System.err.println("Error: " + e.getMessage());
         }
+        Collections.sort(inputData);
         return inputData;
     }//End FileInput Method
 
@@ -92,5 +94,10 @@ public class FileIO {
             file.mkdir();
         return(file.getAbsolutePath() + "/" + "appointdata.txt");
     }
+
+//    public static List<Appointment> sortData(List<Appointment> data)
+//    {
+//
+//    }
 
 }//End FileIO Class

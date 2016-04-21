@@ -26,6 +26,7 @@ import android.widget.Toast;
 import java.io.File;
 import java.io.IOException;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 
 public class MakeAppointment extends AppCompatActivity {
@@ -181,32 +182,38 @@ public class MakeAppointment extends AppCompatActivity {
         tempsave.setLocation(location.getText().toString());
         tempsave.setNotes(reminder.getText().toString());
 
-        MainActivity.appdata.add(tempsave);
-        FileIO fileio = new FileIO();
-        fileio.FileOutput(MainActivity.appdata);
 
-//        Long alertTime = new GregorianCalendar().getTimeInMillis()+5*1000;
-//        Intent alertIntent = new Intent(this, AlertReceiver.class);
-//        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-//        alarmManager.set(AlarmManager.RTC_WAKEUP, alertTime,
-//                PendingIntent.getBroadcast(this, 1, alertIntent,
-//                        PendingIntent.FLAG_UPDATE_CURRENT));
+        if(tempsave.getMilliTime() > System.currentTimeMillis())
+        {
+            setAlarm(tempsave.getMilliTime());
+            Toast.makeText(getApplicationContext(),"Alarm Set for " + tempsave.getCurDate().toString(), Toast.LENGTH_SHORT).show();
+            MainActivity.appdata.add(tempsave);
+            FileIO fileio = new FileIO();
+            fileio.FileOutput(MainActivity.appdata);
+
+            Intent save = new Intent(this,MainActivity.class);
+            //this.appointmentIndex++;
+            startActivity(save);
+            Toast.makeText(getApplicationContext(),"Save Button " + MainActivity.appdata.size(), Toast.LENGTH_LONG).show();
+        }
+        else
+        {
+            Toast.makeText(getApplicationContext(),"Time Before Today", Toast.LENGTH_SHORT).show();
+        }
 
 
-//
-//        appointment[appointmentIndex] = new Appointment();
-//        appointment[appointmentIndex].setTittle(tittle.getText().toString());
-//        appointment[appointmentIndex].setStartDate(appointment_start.getText().toString());
-//        appointment[appointmentIndex].setStartTime(appointment_start.getText().toString());
-//        appointment[appointmentIndex].setEndDate(appointment_end.getText().toString());
-//        appointment[appointmentIndex].setEndTime(appointment_end.getText().toString());
-//        appointment[appointmentIndex].setAllDay(all_day.isChecked());
-//        appointment[appointmentIndex].setFileName(PATH_NAME);
-//        appointment[appointmentIndex].setLocation(location.getText().toString());
-        Intent save = new Intent(this,MainActivity.class);
-        //this.appointmentIndex++;
-        startActivity(save);
-        Toast.makeText(getApplicationContext(),"Save Button " + MainActivity.appdata.size(), Toast.LENGTH_LONG).show();
+    }
+
+    private void setAlarm(long targetCal){
+
+
+//            info.setText("\n\n***\n"
+//                    + "Alarm is set@ " + targetCal.getTime() + "\n"
+//                    + "***\n");  getBaseContext()
+        Intent intent = new Intent(this, AlarmReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getBaseContext(), MainActivity.RQS_1, intent, 0);
+        MainActivity.alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+        MainActivity.alarmManager.set(AlarmManager.RTC_WAKEUP, targetCal, pendingIntent);
     }
 
     public void startRecording(View view) {
