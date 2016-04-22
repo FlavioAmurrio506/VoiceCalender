@@ -40,6 +40,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         Toast.makeText(arg0, "" + looker.get(indexOfItem-1).getTittle() + "", Toast.LENGTH_LONG).show();
 
         MediaPlayer alarmSound = new MediaPlayer();
+        //alarmSound = MediaPlayer.create(arg0,R.raw.morning);
 
         try {
             alarmSound.setDataSource(getAlarmPath());
@@ -65,7 +66,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         File file = new File(filePath,"VoiceCalendarAudio");
         if(!file.exists())
             file.mkdir();
-        return(file.getAbsolutePath() + "/alarmsiren.mp3");
+        return(file.getAbsolutePath() + "/morning.mp3");
     }
 
     public String getCurrentAlarm()

@@ -142,6 +142,12 @@ public class Appointment implements Comparable<Appointment>{
         Date curDate = new Date (year, month, day);
         return curDate.toString();
     }
+
+    public String shortStringDate()
+    {
+        return " (" + (curDate.getMonth()+1) + "/" + curDate.getDate() + "/" + (curDate.getYear()-100)  + ")";
+    }
+
     public void setMilliSec()
     {
         int year;

@@ -53,6 +53,7 @@ public class MakeAppointment extends AppCompatActivity {
     Drawable stopRecDrawable = null;
     Appointment[] appointment = new Appointment[100];
     public static int appointmentIndex = 0;
+    String prevDate = "";
     //private int curFormat = 0;
     //private String fileExt[] = {".mp4", ".3gpp"};
     //private int opFormats[] = {MediaRecorder.OutputFormat.MPEG_4, MediaRecorder.OutputFormat.THREE_GPP};
@@ -68,6 +69,7 @@ public class MakeAppointment extends AppCompatActivity {
 
         Intent activityThatCalled = getIntent();
         String previousActivity = activityThatCalled.getExtras().getString("PATH_NAME_MAIN");
+        prevDate = activityThatCalled.getExtras().getString("MAYBE_MAIN");
         file_location = (EditText)findViewById(R.id.file_location);
         file_location.setText(previousActivity);
         PATH_NAME = previousActivity;
@@ -104,6 +106,7 @@ public class MakeAppointment extends AppCompatActivity {
         stopRecDrawable = stop_rec_image.getDrawable();
         rec_float_button_make.setBackgroundTintList(ColorStateList.valueOf(0xff0000ff));
         play_float_button_make.setBackgroundTintList(ColorStateList.valueOf(0xff0000ff));
+        appointment_start.setText(prevDate);
 
 
 
