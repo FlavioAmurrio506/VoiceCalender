@@ -95,6 +95,83 @@ public class FileIO {
         return(file.getAbsolutePath() + "/" + "appointdata.txt");
     }
 
+    private static String getFilePathDataAlarm()
+    {
+        String filePath = Environment.getExternalStorageDirectory().getPath();
+        File file = new File(filePath,"VoiceCalendarAudio");
+        if(!file.exists())
+            file.mkdir();
+        return(file.getAbsolutePath() + "/" + "alarms.txt");
+    }
+
+    public static List<Long> AlarmSaveIn()
+    {
+        List<Long> inputData = new ArrayList<>();
+        try
+        {
+            FileInputStream fstream = new FileInputStream(getFilePathDataAlarm());
+            DataInputStream in = new DataInputStream(fstream);
+            BufferedReader br = new BufferedReader(new InputStreamReader(in));
+            String strLine;
+
+            while ((strLine = br.readLine()) != null)
+            {
+                inputData.add(Long.parseLong(strLine));
+            }
+        }
+
+        catch (Exception e)
+        {
+            //Catch exception if any
+            System.err.println("Error: " + e.getMessage());
+        }
+        Collections.sort(inputData);
+//        AlarmSaveOut(inputData);
+
+        long curTime = System.currentTimeMillis();
+        for(int i = 0; i<inputData.size(); i++)
+        {
+            if(inputData.get(i)<curTime)
+            {
+                inputData.remove(i);
+            }
+            else if (inputData.get(i)>curTime)
+            {
+                break;
+            }
+        }
+        return inputData;
+    }//End FileInput Method
+
+    public static void AlarmSaveOut(List<Long> outdata)
+    {
+        long curTime = System.currentTimeMillis();
+        String fileName = getFilePathDataAlarm();
+        //String [][] temp = array;
+        PrintWriter outputStream = null;
+
+        try
+        {
+            outputStream = new PrintWriter(fileName);// create  the file
+        }
+        catch (FileNotFoundException e)
+        {
+            System.out.println ("Error opening the file " + fileName);// if there is  no possible to create  the file
+            System.exit (0);
+        }
+        for (int i = 0; i < outdata.size(); i++)
+        {
+            if (outdata.get(i)>curTime)
+            {
+                outputStream.println(outdata.get(i));
+            }
+
+        }//end for loop
+        outputStream.close();// close the file
+        //System.out.println("Those lines were written to " + fileName);
+
+    }
+
 //    public static List<Appointment> sortData(List<Appointment> data)
 //    {
 //

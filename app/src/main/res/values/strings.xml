@@ -7,4 +7,11 @@
     <string name="title_activity_alert_receiver">AlertReceiver</string>
     <string name="title_activity_appointment_list_view">AppointmentListView</string>
     <string name="title_activity_appointment_info_display">AppointmentInfoDisplay</string>
+    <string-array name="reminder_interval">
+        <item>0</item>
+        <item>5</item>
+        <item>10</item>
+        <item>15</item>
+    </string-array>
+    <string name="title_activity_alarm_reminder_screen">AlarmReminderScreen</string>
 </resources>

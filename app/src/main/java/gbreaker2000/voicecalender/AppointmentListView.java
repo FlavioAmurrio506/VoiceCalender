@@ -64,7 +64,7 @@ public class AppointmentListView extends AppCompatActivity {
 
         String[] aptArray = toArray(aptdata);
 
-        ListAdapter theAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,aptArray);
+        ListAdapter theAdapter = new ArrayAdapter<String>(this, R.layout.mytextview,aptArray);
 
         ListView theListView = (ListView) findViewById(R.id.theListView);
 

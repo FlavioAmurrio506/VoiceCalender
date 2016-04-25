@@ -28,13 +28,19 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
-            android:text="Event Info"/>
-    <TextView
-        android:id="@+id/upcoming_events"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+            android:text="Appointments"
+            android:id="@+id/listViewTittle"/>
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/smallTheListView"
+            ></ListView>
+    <!--<TextView-->
+        <!--android:id="@+id/upcoming_events"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
 
-        android:text="Upcoming Events"/>
+        <!--android:text="Upcoming Events"/>-->
 
     </LinearLayout>
 

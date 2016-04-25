@@ -1,7 +1,11 @@
 package gbreaker2000.voicecalender;
 
+import android.app.AppOpsManager;
+
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 public class Appointment implements Comparable<Appointment>{
 
@@ -16,6 +20,7 @@ public class Appointment implements Comparable<Appointment>{
     private boolean allDay;
     private long milliTime = 0;
     private Date curDate = new Date();
+    int reminderInterval = 0;
 
     public Appointment()
     {
@@ -130,6 +135,17 @@ public class Appointment implements Comparable<Appointment>{
     public void setAllDay(boolean allDay) {
         this.allDay = allDay;
     }
+    public boolean hasRecording()
+    {
+        if (this.getFileName().equals("") || this.getFileName().equals(null))
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
 
     public void setNotes(String notes) {
         if(!notes.equals(""))
@@ -179,10 +195,99 @@ public class Appointment implements Comparable<Appointment>{
         return milliTime;
     }
 
+    public void setReminderInterval(String remInt)
+    {
+        this.reminderInterval = Integer.parseInt(remInt);
+    }
+
     @Override
     public int compareTo(Appointment compApp) {
         long comparemilli = compApp.getMilliTime();
 
         return (int)((this.getMilliTime() - comparemilli)/(1000*60));
+    }
+
+    public static Appointment NextAppointment()
+    {
+        long curTime = System.currentTimeMillis();
+        FileIO fileIO = new FileIO();
+        List<Appointment> aptFile = new ArrayList<>();
+        aptFile.clear();
+        aptFile.addAll(fileIO.FileInput());
+        int indexOfNext = 0;
+        for(int i = 0; i < aptFile.size(); i++)
+        {
+            if (aptFile.get(i).getMilliTime() > curTime)
+            {
+                try
+                {
+                    indexOfNext = i - 1;
+                    break;
+                }
+                catch (Exception e)
+                {
+                    indexOfNext = i;
+                    break;
+                }
+            }
+        }
+        return aptFile.get(indexOfNext);
+    }
+    public static List<Appointment> DayAppointments(String selDay)
+    {
+
+        FileIO fileIO = new FileIO();
+        List<Appointment> aptFile = new ArrayList<>();
+        aptFile.clear();
+        aptFile.addAll(fileIO.FileInput());
+        List<Appointment> todayApt = new ArrayList<>();
+        for(int i = 0; i < aptFile.size(); i++)
+        {
+            if(aptFile.get(i).getStartDate().equals(selDay))
+            {
+                todayApt.add(aptFile.get(i));
+            }
+        }
+        return todayApt;
+    }
+    public static int AptDisSearch(long searchMilli)
+    {
+//        Appointment foundApt = null;
+        int foundIndex = 0;
+        FileIO fileIO = new FileIO();
+        List<Appointment> aptFile = new ArrayList<>();
+        aptFile.clear();
+        aptFile.addAll(fileIO.FileInput());
+        for(int i = 0; i<aptFile.size(); i++)
+        {
+            if (aptFile.get(i).getMilliTime() == searchMilli)
+            {
+                foundIndex = i;
+                break;
+            }
+        }
+        return foundIndex;
+
+    }
+    public static String aptStringBuilder(Appointment foundApt)
+    {
+        StringBuilder sb = new StringBuilder();
+        try {
+
+            sb.append("Tittle: " + foundApt.getTittle() + "\n");
+            sb.append("Date: " + foundApt.getStartDate() + "\n");
+            sb.append("Time: " + foundApt.getStartTime() + "\n");
+            sb.append("Location: " + foundApt.getLocation() + "\n");
+            sb.append("Notes: " + foundApt.getNotes() + "\n");
+            sb.append("Recording: " + foundApt.hasRecording() + "\n");
+//            Toast.makeText(this, "" + looker.get(indexOfItem - 1).getTittle() + "", Toast.LENGTH_LONG).show();
+        }
+
+
+        catch (Exception e)
+        {
+
+        }
+        return sb.toString();
     }
 }
