@@ -36,6 +36,20 @@ public class Appointment implements Comparable<Appointment>{
         //curAppoint = new Date();
     }
 
+    public Appointment(String sTittle, String date)
+    {
+        this.tittle = sTittle;
+        this.startDate = date;
+        startTime = "0:00";
+        endDate = "01/01/1970";
+        endTime = "0:00";
+        fileName = "";
+        location = "";
+        notes = "";
+        allDay = false;
+        //curAppoint = new Date();
+    }
+
 
     public String getNotes() {
         return notes;
@@ -243,7 +257,29 @@ public class Appointment implements Comparable<Appointment>{
         List<Appointment> todayApt = new ArrayList<>();
         for(int i = 0; i < aptFile.size(); i++)
         {
+
             if(aptFile.get(i).getStartDate().equals(selDay))
+            {
+                todayApt.add(aptFile.get(i));
+            }
+        }
+        return todayApt;
+    }
+
+    public static List<Appointment> UpComingAppointments()
+    {
+        long curTime = System.currentTimeMillis();
+
+
+        FileIO fileIO = new FileIO();
+        List<Appointment> aptFile = new ArrayList<>();
+        aptFile.clear();
+        aptFile.addAll(fileIO.FileInput());
+        List<Appointment> todayApt = new ArrayList<>();
+        for(int i = 0; i < aptFile.size(); i++)
+        {
+            aptFile.get(i).setMilliSec();
+            if(aptFile.get(i).getMilliTime()>curTime)
             {
                 todayApt.add(aptFile.get(i));
             }

@@ -27,6 +27,7 @@ import java.util.HashSet;
  */
 public class CalendarView extends LinearLayout
 {
+//    public static HashSet<Date> please= new HashSet<>();
     // for logging
     private static final String LOGTAG = "Calendar View";
 
@@ -129,6 +130,7 @@ public class CalendarView extends LinearLayout
             {
                 currentDate.add(Calendar.MONTH, 1);
                 updateCalendar();
+//                updateCalendar(please);
             }
         });
 
@@ -140,6 +142,7 @@ public class CalendarView extends LinearLayout
             {
                 currentDate.add(Calendar.MONTH, -1);
                 updateCalendar();
+//                updateCalendar(please);
             }
         });
 
@@ -209,7 +212,7 @@ public class CalendarView extends LinearLayout
     private class CalendarAdapter extends ArrayAdapter<Date>
     {
         // days with events
-        private HashSet<Date> eventDays;
+        public HashSet<Date> eventDays;
 
         // for view inflation
         private LayoutInflater inflater;
@@ -218,6 +221,8 @@ public class CalendarView extends LinearLayout
         {
             super(context, R.layout.control_calendar_day, days);
             this.eventDays = eventDays;
+//            CalendarView.please.clear();
+//            CalendarView.please.addAll(eventDays);
             inflater = LayoutInflater.from(context);
         }
 
@@ -266,7 +271,7 @@ public class CalendarView extends LinearLayout
             if (month != today.getMonth() || year != today.getYear())
             {
                 // if this day is outside current month, grey it out
-                ((TextView)view).setTextColor(getResources().getColor(R.color.greyed_out));
+//                ((TextView)view).setTextColor(getResources().getColor(R.color.greyed_out));
             }
             else if (day == today.getDate())
             {

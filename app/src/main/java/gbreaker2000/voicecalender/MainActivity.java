@@ -79,7 +79,14 @@ public class MainActivity extends AppCompatActivity {
         today_button.setBackgroundTintList(ColorStateList.valueOf(0xff0000ff));
         add_float_Button.setBackgroundTintList(ColorStateList.valueOf(0xff0000ff));
         listViewTittle = (TextView)findViewById(R.id.listViewTittle);
-        setNextAlarm();
+        try
+        {
+            setNextAlarm();
+        }
+        catch (Exception e)
+        {
+
+        }
 
         StringBuilder sb = new StringBuilder();
         //sb.append("Upcoming Events \n");
@@ -123,6 +130,7 @@ public class MainActivity extends AppCompatActivity {
         {
             events.add(appdata.get(i).getCurDate());
         }
+
 
         CalendarView cv = ((CalendarView)findViewById(R.id.calendar_view));
         cv.updateCalendar(events);
@@ -185,7 +193,8 @@ public class MainActivity extends AppCompatActivity {
 
 
         //--------New Stuff----
-        ListViewModifier((ArrayList<Appointment>) appdata);
+        ListViewModifier((ArrayList<Appointment>) Appointment.UpComingAppointments());
+//        ListViewModifier((ArrayList<Appointment>) appdata);
 
 //        FileIO read = new FileIO();
 //        final ArrayList<Appointment> aptdata = new ArrayList<>();
@@ -227,12 +236,21 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
-                if(mPlayer.isPlaying())
+                try
                 {
-                    StopPlayer();
+                    if(mPlayer.isPlaying())
+                    {
+                        StopPlayer();
+                    }
+                    else{
+                        playAudio(tApt.get(i).getFileName());
+                    }
                 }
-                else{
-                    playAudio(tApt.get(i).getFileName());
+                catch (Exception e)
+                {
+                    Toast.makeText(MainActivity.this,"Slow Down, Old device detected",Toast.LENGTH_SHORT).show();
+                    Intent crash = new Intent(MainActivity.this, MainActivity.class);
+                    startActivity(crash);
                 }
             }
         });
@@ -276,6 +294,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void addAppointmentMethod(View view) {
+        recorder.reset();
+        recorder.release();
         Intent intent = new Intent(this, MakeAppointment.class);
         intent.putExtra("MAYBE_MAIN",maybe);
         intent.putExtra("PATH_NAME_MAIN",PATH_NAME);
@@ -307,6 +327,7 @@ public class MainActivity extends AppCompatActivity {
             recorder.reset();
             rec_float_button.setBackgroundTintList(ColorStateList.valueOf(0xff0000ff));
             recStatus = false;
+            recorder.release();
             Toast.makeText(this,"Recording Stopped",Toast.LENGTH_SHORT).show();
             Toast.makeText(this,PATH_NAME,Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(this, MakeAppointment.class);
@@ -343,6 +364,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void showCurrentDate(View view) {
+
+        mPlayer.release();
+        recorder.release();
 
 
         Intent today = new Intent(this,AppointmentListView.class);
@@ -464,8 +488,15 @@ public class MainActivity extends AppCompatActivity {
 
     public void StopPlayer() {
 
-        mPlayer.release();
-        mPlayer = new MediaPlayer();
+        if (mPlayer.isPlaying())
+        {
+            mPlayer.stop();
+//            mPlayer.release();
+            mPlayer.reset();
+            //mPlayer = new MediaPlayer();
+        }
+
+
 
 //        temp_float_button.setImageDrawable(playDrawable);
 
@@ -500,4 +531,6 @@ public class MainActivity extends AppCompatActivity {
         alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         alarmManager.set(AlarmManager.RTC_WAKEUP, alarms.get(0), pendingIntent);
     }
+
+
 }

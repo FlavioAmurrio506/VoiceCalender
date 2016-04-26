@@ -39,6 +39,7 @@ public class AlarmReminderScreen extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         stopReceiver();
+        alarmSound.release();
         setNextAlarm();
         super.onBackPressed();
 
@@ -54,6 +55,7 @@ public class AlarmReminderScreen extends AppCompatActivity {
         StringBuilder sb = new StringBuilder();
         playDrawable = getResources().getDrawable(R.drawable.alpha_play);
         stopDrawable = getResources().getDrawable(R.drawable.alpha_stop);
+        alarmSound = MediaPlayer.create(this, R.raw.morning);
 
         FileIO read = new FileIO();
 
@@ -94,24 +96,24 @@ public class AlarmReminderScreen extends AppCompatActivity {
 
         }
 
-
+        alarmSound.start();
         //alarmSound = MediaPlayer.create(arg0,R.raw.morning);
 
-        if(!looker.get(indexOfItem).isAllDay()) {
-
-            try {
-                alarmSound.setDataSource(getAlarmPath());
-                alarmSound.prepare();
-                alarmSound.start();
-
-
-            } catch (IOException e) {
-                //Log.e(LOG_TAG, "prepare() failed");
-            }
+//        if(!looker.get(indexOfItem).isAllDay()) {
+//
+//            try {
+//                alarmSound.setDataSource(getAlarmPath());
+//                alarmSound.prepare();
+//                alarmSound.start();
+//
+//
+//            } catch (IOException e) {
+//                //Log.e(LOG_TAG, "prepare() failed");
+//            }
             looker.get(indexOfItem).setAllDay(true);
             read.FileOutput(looker);
 
-        }
+//        }
 //        while(1==1)
 //        {
 //            if (!alarmSound.isPlaying())
@@ -168,8 +170,13 @@ public class AlarmReminderScreen extends AppCompatActivity {
     }
     public static void stopReceiver()
     {
-        alarmSound.release();
-        alarmSound = new MediaPlayer();
+        if (alarmSound.isPlaying()) {
+            alarmSound.stop();
+//            mPlayer.release();
+            alarmSound.reset();
+        }
+//        alarmSound.release();
+//        alarmSound = new MediaPlayer();
             }
 
     public void stopReceiver(View view) {
@@ -204,8 +211,9 @@ public class AlarmReminderScreen extends AppCompatActivity {
         }
         else
         {
-            alarmSound.release();
-            alarmSound = null;
+            alarmSound.reset();
+//            alarmSound.release();
+//            alarmSound = null;
 //            playStatus = false;
 //            ars_play_buttton.setImageDrawable(playDrawable);
         }
@@ -220,6 +228,7 @@ public class AlarmReminderScreen extends AppCompatActivity {
 
     public void gotoMain(View view) {
         stopReceiver();
+        alarmSound.release();
         setNextAlarm();
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);

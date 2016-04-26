@@ -11,6 +11,8 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -140,15 +142,23 @@ public class FileIO {
                 break;
             }
         }
+
+        if (inputData.size()<1)
+        {
+            inputData.add(new Date(2030-1900,8,23).getTime());
+        }
         return inputData;
     }//End FileInput Method
 
-    public static void AlarmSaveOut(List<Long> outdata)
+    public static void AlarmSaveOut(List<Long> outdatain)
     {
+        ArrayList<Long> outdata = new ArrayList<>();
+        outdata.addAll(outdatain);
         long curTime = System.currentTimeMillis();
         String fileName = getFilePathDataAlarm();
         //String [][] temp = array;
         PrintWriter outputStream = null;
+        long birth = new Date(2030-1900, 9-1, 23).getTime();
 
         try
         {
@@ -159,6 +169,7 @@ public class FileIO {
             System.out.println ("Error opening the file " + fileName);// if there is  no possible to create  the file
             System.exit (0);
         }
+        if (outdata.size() < 1) {outdata.add(birth);}
         for (int i = 0; i < outdata.size(); i++)
         {
             if (outdata.get(i)>curTime)
@@ -172,9 +183,6 @@ public class FileIO {
 
     }
 
-//    public static List<Appointment> sortData(List<Appointment> data)
-//    {
-//
-//    }
+
 
 }//End FileIO Class

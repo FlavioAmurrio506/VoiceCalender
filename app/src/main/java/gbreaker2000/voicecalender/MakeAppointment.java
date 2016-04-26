@@ -242,10 +242,31 @@ public class MakeAppointment extends AppCompatActivity {
         aptdata.add(tempsave);
 
         fileio.FileOutput(aptdata);
+        try
+        {
+            if (mPlayer.isPlaying())
+            {
+                mPlayer.stop();
+//            mPlayer.release();
+                mPlayer.reset();}
+        }
+        catch (Exception e)
+        {
+
+        }
 
         Intent save = new Intent(this,MainActivity.class);
         //this.appointmentIndex++;
         startActivity(save);
+
+        try
+        {
+            mPlayer.release();
+        }
+        catch (Exception e)
+        {
+
+        }
 
 
     }
@@ -263,6 +284,7 @@ public class MakeAppointment extends AppCompatActivity {
             FileIO.AlarmSaveOut(alarms);
         alarms.clear();
         alarms.addAll(FileIO.AlarmSaveIn());
+
 
 
 //            info.setText("\n\n***\n"
