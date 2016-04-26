@@ -294,12 +294,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void addAppointmentMethod(View view) {
-        recorder.reset();
-        recorder.release();
-        Intent intent = new Intent(this, MakeAppointment.class);
-        intent.putExtra("MAYBE_MAIN",maybe);
-        intent.putExtra("PATH_NAME_MAIN",PATH_NAME);
-        startActivity(intent);
+        try {
+            recorder.reset();
+            recorder.release();
+            Intent intent = new Intent(this, MakeAppointment.class);
+            intent.putExtra("MAYBE_MAIN",maybe);
+            intent.putExtra("PATH_NAME_MAIN",PATH_NAME);
+            startActivity(intent);
+        }
+        catch (Exception e)
+        {
+
+        }
+
 
     }
 
@@ -376,7 +383,8 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        StopPlayer();
+        finish();
+//        System.exit(0);
     }
 
     public static String dateExtractor(String datExc)

@@ -1,11 +1,13 @@
 package gbreaker2000.voicecalender;
 
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -57,10 +59,11 @@ public class AppointmentListView extends AppCompatActivity {
 //        });
        // getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        FileIO read = new FileIO();
+//        FileIO read = new FileIO();
         final ArrayList<Appointment> aptdata = new ArrayList<>();
         aptdata.clear();
-        aptdata.addAll(read.FileInput());
+//        aptdata.addAll(read.FileInput());
+        aptdata.addAll((ArrayList<Appointment>) Appointment.UpComingAppointments());
 
         String[] aptArray = toArray(aptdata);
 
@@ -74,9 +77,26 @@ public class AppointmentListView extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
-                StopPlayer();
+                try
+                {
+                    if(mPlayer.isPlaying())
+                    {
+                        StopPlayer();
+                    }
+                    else{
+                        playAudio(aptdata.get(i).getFileName());
+                    }
+                }
+                catch (Exception e)
+                {
+                    Toast.makeText(AppointmentListView.this,"Slow Down, Old device detected",Toast.LENGTH_SHORT).show();
+                    Intent crash = new Intent(AppointmentListView.this, MainActivity.class);
+                    startActivity(crash);
+                }
 
-                playAudio(aptdata.get(i).getFileName());
+//                StopPlayer();
+//
+//                playAudio(aptdata.get(i).getFileName());
                 //Toast.makeText(AppointmentListView.this, aptdata.get(i).getCurDate().toString().substring(0,16), Toast.LENGTH_SHORT).show();
 
 //                while(mPlayer.isPlaying())
@@ -91,6 +111,21 @@ public class AppointmentListView extends AppCompatActivity {
 
                 //Toast.makeText(AppointmentListView.this, tvShowPicked, Toast.LENGTH_SHORT).show();
             }
+        });
+
+        theListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+
+            @Override
+            public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
+                Toast.makeText(AppointmentListView.this,aptdata.get(position).getTittle(),Toast.LENGTH_LONG).show();
+                DialogFragment myFragment = MyDialogFragment.newInstance(aptdata.get(position).getMilliTime());
+
+                myFragment.show(getSupportFragmentManager(), "hello");
+
+//            smallTheListView.getItemAtPosition(position) + "");
+                return true;
+            }
+
         });
 
 

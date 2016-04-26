@@ -271,7 +271,7 @@ public class CalendarView extends LinearLayout
             if (month != today.getMonth() || year != today.getYear())
             {
                 // if this day is outside current month, grey it out
-//                ((TextView)view).setTextColor(getResources().getColor(R.color.greyed_out));
+                ((TextView)view).setTextColor(getResources().getColor(R.color.greyed_out));
             }
             else if (day == today.getDate())
             {

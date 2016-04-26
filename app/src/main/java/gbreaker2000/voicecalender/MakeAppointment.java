@@ -68,6 +68,19 @@ public class MakeAppointment extends AppCompatActivity {
     //private int opFormats[] = {MediaRecorder.OutputFormat.MPEG_4, MediaRecorder.OutputFormat.THREE_GPP};
 
 
+    @Override
+    public void onBackPressed() {
+
+        try {
+//            Intent gotoMain = new Intent(this, MainActivity.class);
+//            startActivity(gotoMain);
+            super.onBackPressed();
+        }
+        catch (Exception e)
+        {
+
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
