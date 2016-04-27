@@ -1,5 +1,6 @@
 package gbreaker2000.voicecalender;
 
+import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.FragmentTransaction;
 import android.app.PendingIntent;
@@ -72,9 +73,14 @@ public class MakeAppointment extends AppCompatActivity {
     public void onBackPressed() {
 
         try {
+            Intent gotoMain = new Intent(this, MainActivity.class);
+            gotoMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(gotoMain);
+            finish();
+//            Toast.makeText(this,"Press Cancel!",Toast.LENGTH_SHORT).show();
 //            Intent gotoMain = new Intent(this, MainActivity.class);
 //            startActivity(gotoMain);
-            super.onBackPressed();
+//            super.onBackPressed();
         }
         catch (Exception e)
         {
@@ -148,6 +154,12 @@ public class MakeAppointment extends AppCompatActivity {
         appointment_start.setText(prevDate);
         reminder_int = (Spinner)findViewById(R.id.reminder_int);
 
+//        appointment_start.setTag(appointment_start.getKeyListener());
+//        appointment_end.setTag(appointment_end.getKeyListener());
+//
+//        appointment_start.setKeyListener(null);
+//        appointment_end.setKeyListener(null);
+
 
 
 
@@ -203,6 +215,9 @@ public class MakeAppointment extends AppCompatActivity {
 //    }
 
     public void cancelAppoint(View view) {
+        Intent gotoMain = new Intent(this, MainActivity.class);
+        gotoMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(gotoMain);
         finish();
 //        Intent cancel = new Intent(this, MakeAppointment.class);
 //        startActivity(cancel);
@@ -268,9 +283,9 @@ public class MakeAppointment extends AppCompatActivity {
 
         }
 
-        Intent save = new Intent(this,MainActivity.class);
-        //this.appointmentIndex++;
-        startActivity(save);
+//        Intent save = new Intent(this,MainActivity.class);
+//        //this.appointmentIndex++;
+//        startActivity(save);
 
         try
         {
@@ -281,6 +296,10 @@ public class MakeAppointment extends AppCompatActivity {
 
         }
 
+        Intent gotoMain = new Intent(this, MainActivity.class);
+        gotoMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(gotoMain);
+        finish();
 
     }
 

@@ -1,6 +1,7 @@
 package gbreaker2000.voicecalender;
 
 import android.app.AlarmManager;
+import android.app.AppOpsManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -21,6 +22,7 @@ import android.widget.Toast;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class AlarmReminderScreen extends AppCompatActivity {
@@ -31,7 +33,7 @@ public class AlarmReminderScreen extends AppCompatActivity {
     Drawable playDrawable = null;
     Drawable stopDrawable = null;
     List<Appointment> looker= new ArrayList<>();
-    int indexOfItem = 0;
+    int indexOfItem = -1;
     FileIO fileio = new FileIO();
     final static int RQS_1 = 1;
     public static AlarmManager alarmManager;
@@ -50,6 +52,8 @@ public class AlarmReminderScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alarm_reminder_screen);
 
+        Appointment found = alarmRinger();
+
         alarm_info = (TextView)findViewById(R.id.alarm_info);
         ars_play_buttton = (FloatingActionButton)findViewById(R.id.ars_play_buttton);
         StringBuilder sb = new StringBuilder();
@@ -65,8 +69,10 @@ public class AlarmReminderScreen extends AppCompatActivity {
 
 
 
+
         for (int i = 0; i<looker.size(); i++)
         {
+            looker.get(i).setMilliSec();
             if(looker.get(i).getMilliTime()>System.currentTimeMillis())
             {
                 indexOfItem = i;
@@ -78,6 +84,11 @@ public class AlarmReminderScreen extends AppCompatActivity {
         {
             indexOfItem = 0;
         }
+
+//        if(found.equals(looker.get(indexOfItem)))
+//        {
+//            looker.set(indexOfItem, found);
+//        }
 
         try {
 
@@ -170,10 +181,17 @@ public class AlarmReminderScreen extends AppCompatActivity {
     }
     public static void stopReceiver()
     {
-        if (alarmSound.isPlaying()) {
-            alarmSound.stop();
+        try
+        {
+            if (alarmSound.isPlaying()) {
+                alarmSound.stop();
 //            mPlayer.release();
-            alarmSound.reset();
+                alarmSound.reset();
+            }
+        }
+        catch (Exception e)
+        {
+
         }
 //        alarmSound.release();
 //        alarmSound = new MediaPlayer();
@@ -228,10 +246,94 @@ public class AlarmReminderScreen extends AppCompatActivity {
 
     public void gotoMain(View view) {
         stopReceiver();
-        alarmSound.release();
+        try {
+            alarmSound.release();
+        }
+        catch (Exception e)
+        {
+
+        }
+
         setNextAlarm();
         Intent intent = new Intent(this, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
+        finish();
+    }
+
+    private Appointment alarmRinger()
+    {
+        Date today = new Date(System.currentTimeMillis());
+        long secToday = today.getTime();
+//        int toDay = today.getDate();
+//        int toYear = today.getYear();
+//        int toMon = today.getMonth();
+//        int toHR = today.getHours();
+//        int toMin = today.getMinutes();
+//        int day,year,month,hour,min;
+        long milliMin = 2*60*1000;
+        Date secondpass = new Date();
+        long secondLong = 0;
+        Date test = new Date();
+        ArrayList<Appointment> search = new ArrayList<>();
+        search.addAll(FileIO.FileInput());
+        Appointment found = new Appointment();
+        ArrayList<Appointment> possible = new ArrayList<>();
+        for (int i = 0; i<search.size(); i++)
+        {
+            found = search.get(i);
+            test = found.dateObjGet();
+            if ((test.getTime()-(32*60*1000))>today.getTime() && (test.getTime()+(2*60*1000))>today.getTime())
+            {
+                possible.add(found);
+            }
+        }
+        if (possible.size()<1)
+        {
+            return search.get(0);
+        }
+        if (possible.size() == 1)
+        {
+            return possible.get(0);
+        }
+        else
+        {
+            for (int i = 0; i< possible.size(); i++)
+            {
+                secondpass = possible.get(i).dateObjGet();
+                secondLong = secondpass.getTime();
+
+
+                if ((secondLong - milliMin) < secToday && (secondLong + milliMin) > secToday)
+                {
+                    return possible.get(i);
+                }
+                if ((secondLong - milliMin) < (secToday + (5*60*1000)) && (secondLong + milliMin) > (secToday + (5*60*1000)))
+                {
+                    return possible.get(i);
+                }
+                else if ((secondLong - milliMin) < (secToday + (10*60*1000)) && (secondLong + milliMin) > (secToday + (10*60*1000)))
+                {
+                    return possible.get(i);
+                }
+                else if ((secondLong - milliMin) < (secToday + (15*60*1000)) && (secondLong + milliMin) > (secToday + (15*60*1000)))
+                {
+                    return possible.get(i);
+                }
+
+                else if ((secondLong - milliMin) < (secToday + (30*60*1000)) && (secondLong + milliMin) > (secToday + (30*60*1000)))
+                {
+                    return possible.get(i);
+                }
+                else
+                {
+                    return search.get(0);
+                }
+
+            }
+        }
+        return search.get(0);
+
     }
     public void setNextAlarm() {
 //        long currentTime = System.currentTimeMillis();

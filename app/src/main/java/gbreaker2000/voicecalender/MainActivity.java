@@ -64,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
 
     MediaPlayer mPlayer = new MediaPlayer();
     TextView listViewTittle = null;
+    public static HashSet<Date> Mainevents;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,6 +126,8 @@ public class MainActivity extends AppCompatActivity {
 
         HashSet<Date> events = new HashSet<>();
         events.add(new Date());
+//        Mainevents = new HashSet<Date>();
+//        Mainevents.addAll(events);
 
         for(int i = 0; i<appdata.size(); i++)
         {
@@ -295,7 +298,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void addAppointmentMethod(View view) {
         try {
-            recorder.reset();
+//            recorder.reset();
             recorder.release();
             Intent intent = new Intent(this, MakeAppointment.class);
             intent.putExtra("MAYBE_MAIN",maybe);
@@ -312,7 +315,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void quickRec(View view) {
         if (!recStatus) {
-            //recorder = new MediaRecorder();
+            recorder = new MediaRecorder();
             recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
             recorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
             recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
@@ -330,8 +333,15 @@ public class MainActivity extends AppCompatActivity {
         }
         else
         {
-            recorder.stop();
-            recorder.reset();
+            try
+            {
+                recorder.stop();
+                recorder.reset();
+            }
+            catch (Exception e)
+            {
+
+            }
             rec_float_button.setBackgroundTintList(ColorStateList.valueOf(0xff0000ff));
             recStatus = false;
             recorder.release();

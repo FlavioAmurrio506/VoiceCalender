@@ -205,6 +205,12 @@ public class Appointment implements Comparable<Appointment>{
         return curDate;
     }
 
+    public Date dateObjGet()
+    {
+        setMilliSec();
+        return this.curDate;
+    }
+
     public long getMilliTime() {
         return milliTime;
     }

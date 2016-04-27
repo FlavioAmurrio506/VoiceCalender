@@ -130,7 +130,7 @@ public class CalendarView extends LinearLayout
             {
                 currentDate.add(Calendar.MONTH, 1);
                 updateCalendar();
-//                updateCalendar(please);
+//                updateCalendar(MainActivity.Mainevents);
             }
         });
 
@@ -142,7 +142,7 @@ public class CalendarView extends LinearLayout
             {
                 currentDate.add(Calendar.MONTH, -1);
                 updateCalendar();
-//                updateCalendar(please);
+//                updateCalendar(MainActivity.Mainevents);
             }
         });
 
@@ -253,7 +253,7 @@ public class CalendarView extends LinearLayout
                             eventDate.getYear() == year)
                     {
                         // mark this day for event
-                        //view.setBackgroundResource(R.drawable.reminder);
+                        view.setBackgroundResource(R.drawable.reminder);
                         view.setBackgroundColor(0xffff0000);
 //                        ((TextView)view).setTextColor(0xffff0000);
 //                        ((TextView)view).setTypeface(null, Typeface.BOLD);

@@ -63,8 +63,8 @@ public class AppointmentListView extends AppCompatActivity {
         final ArrayList<Appointment> aptdata = new ArrayList<>();
         aptdata.clear();
 //        aptdata.addAll(read.FileInput());
-        aptdata.addAll((ArrayList<Appointment>) Appointment.UpComingAppointments());
-
+//        aptdata.addAll((ArrayList<Appointment>) Appointment.UpComingAppointments());
+        aptdata.addAll(FileIO.FileInput());
         String[] aptArray = toArray(aptdata);
 
         ListAdapter theAdapter = new ArrayAdapter<String>(this, R.layout.mytextview,aptArray);
@@ -196,7 +196,11 @@ public class AppointmentListView extends AppCompatActivity {
         }
         else
         {
-            super.onBackPressed();
+//            super.onBackPressed();
+            Intent gotoMain = new Intent(this, MainActivity.class);
+            gotoMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(gotoMain);
+            finish();
         }
     }
 }
