@@ -8,6 +8,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.widget.Toast;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +18,7 @@ import java.util.List;
 public class MyDialogFragment extends DialogFragment {
 
     long time;
+    File file;
 
     /**
      * Create a new instance of MyDialogFragment, providing "num"
@@ -65,12 +67,28 @@ public class MyDialogFragment extends DialogFragment {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
 
+                boolean deleted = false;
+
+                if (aptFile.get(foundIndex).hasRecording())
+                {
+                    file = new File(aptFile.get(foundIndex).getFileName());
+                    deleted = file.delete();
+                }
                 aptFile.remove(foundIndex);
                 FileIO.FileOutput(aptFile);
                 Intent intent = new Intent(getContext(), MainActivity.class);
                 startActivity(intent);
+                String msg = "";
+                if (deleted)
+                {
+                    msg = "Appointment and Voice Recording Deleted";
+                }
+                else
+                {
+                    msg = "Appointment Deleted";
+                }
 
-                Toast.makeText(getActivity(), "Clicked OK", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
 
             }
         });

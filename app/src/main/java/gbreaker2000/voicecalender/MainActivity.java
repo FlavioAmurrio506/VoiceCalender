@@ -16,6 +16,8 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -61,6 +63,8 @@ public class MainActivity extends AppCompatActivity {
     public static AlarmManager alarmManager;
     TextView upcoming_events;
     String maybe = "";
+//    TextView calendar_date_display;
+//    String monthTextView;--------------
 
     MediaPlayer mPlayer = new MediaPlayer();
     TextView listViewTittle = null;
@@ -80,6 +84,10 @@ public class MainActivity extends AppCompatActivity {
         today_button.setBackgroundTintList(ColorStateList.valueOf(0xff0000ff));
         add_float_Button.setBackgroundTintList(ColorStateList.valueOf(0xff0000ff));
         listViewTittle = (TextView)findViewById(R.id.listViewTittle);
+//--------------------        calendar_date_display = (TextView) findViewById(R.id.calendar_date_display);
+
+
+
         try
         {
             setNextAlarm();
@@ -124,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
 //        upcoming_events.setText(sb.toString());
 
 
-        HashSet<Date> events = new HashSet<>();
+        final HashSet<Date> events = new HashSet<>();
         events.add(new Date());
 //        Mainevents = new HashSet<Date>();
 //        Mainevents.addAll(events);
@@ -135,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-        CalendarView cv = ((CalendarView)findViewById(R.id.calendar_view));
+        final CalendarView cv = ((CalendarView)findViewById(R.id.calendar_view));
         cv.updateCalendar(events);
         // assign event handler
         cv.setEventHandler(new CalendarView.EventHandler()
@@ -165,6 +173,8 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+//       -------------------------------------- monthTextView = calendar_date_display.getText().toString();
 
 //         + "   " + year  df.format(date)month + "/" + day + "/" + year
 //        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -221,7 +231,32 @@ public class MainActivity extends AppCompatActivity {
 //                playAudio(aptdata.get(i).getFileName());
 //            }
 //        });
+//        calendar_date_display.addTextChangedListener(new TextWatcher() {
+//            @Override
+//            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+//
+//
+//            }
+//
+//            @Override
+//            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+//                String a = calendar_date_display.getText().toString();
+//                if (!a.equals(monthTextView))
+//                {
+//                    cv.updateCalendar();
+//                }
+//
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable editable) {
+//
+//            }
+//        });
+//
     }
+
+
 
     public void ListViewModifier(final ArrayList<Appointment> tApt)
     {
@@ -262,7 +297,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-            Toast.makeText(MainActivity.this,tApt.get(position).getTittle(),Toast.LENGTH_LONG).show();
+//            Toast.makeText(MainActivity.this,tApt.get(position).getTittle(),Toast.LENGTH_LONG).show();
             DialogFragment myFragment = MyDialogFragment.newInstance(tApt.get(position).getMilliTime());
 
             myFragment.show(getSupportFragmentManager(), "hello");
