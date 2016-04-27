@@ -307,7 +307,7 @@ public class AlarmReminderScreen extends AppCompatActivity {
         }
         if (possible.size()<1)
         {
-            return search.get(0);
+            return Appointment.NextAppointment();
         }
         if (possible.size() == 1)
         {

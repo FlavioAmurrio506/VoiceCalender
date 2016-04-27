@@ -175,7 +175,17 @@ public class Appointment implements Comparable<Appointment>{
 
     public String shortStringDate()
     {
-        return " (" + (curDate.getMonth()+1) + "/" + curDate.getDate() + "/" + (curDate.getYear()-100)  + ")";
+        this.setMilliSec();
+        String min;
+        if(curDate.getMinutes() <10)
+        {
+            min = "0" + curDate.getMinutes();
+        }
+        else
+        {
+            min = "" + curDate.getMinutes();
+        }
+        return " (" + (curDate.getMonth()+1) + "/" + curDate.getDate() + "/" + (curDate.getYear()-100)  + ") (" + curDate.getHours() + ":" + min + ") ";
     }
 
     public void setMilliSec()
@@ -251,7 +261,7 @@ public class Appointment implements Comparable<Appointment>{
                 }
             }
         }
-        return aptFile.get(indexOfNext);
+        return aptFile.get(indexOfNext-1);
     }
     public static List<Appointment> DayAppointments(String selDay)
     {
