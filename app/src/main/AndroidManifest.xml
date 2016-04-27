@@ -8,15 +8,17 @@
 
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="com.android.alarm.permission.SET_ALARM"/>
+    <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
+    <uses-permission android:name="android.permission.VIBRATE"/>
+
+    <android:uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <android:uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <!--
-
     <android:uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <android:uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <android:uses-permission android:name="com.android.alarm.permission.SET_ALARM"/>
     -->
-
     <application
         android:allowBackup="true"
         android:icon="@drawable/icon"
@@ -63,8 +65,39 @@
         <activity
             android:name=".AlertReceiver"
             android:label="@string/title_activity_alert_receiver"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-        <receiver android:name=".AlarmReceiver" android:process=":remote" />
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <receiver
+            android:name=".AlarmReceiver"
+            android:process=":remote" />
+
+        <activity
+            android:name=".AppointmentListView"
+            android:label="@string/title_activity_appointment_list_view"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="gbreaker2000.voicecalender.MainActivity" />
+        </activity>
+        <activity
+            android:name=".AppointmentInfoDisplay"
+            android:label="@string/title_activity_appointment_info_display"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="gbreaker2000.voicecalender.MainActivity" />
+        </activity>
+        <activity
+            android:name=".AlarmReminderScreen"
+            android:label="@string/title_activity_alarm_reminder_screen"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="gbreaker2000.voicecalender.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

@@ -2,6 +2,7 @@ package gbreaker2000.voicecalender;
 
 import android.app.AlarmManager;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
@@ -12,26 +13,36 @@ import android.os.Environment;
 import android.os.SystemClock;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CalendarView;
+//import android.widget.CalendarView;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ListAdapter;
+import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    CalendarView calendar;
+    //CalendarView calendar;
     EditText tittle;
     //String date;
     DatePicker date_picker;
@@ -48,6 +59,12 @@ public class MainActivity extends AppCompatActivity {
     public static List<Appointment> appdata = new ArrayList<>();
     final static int RQS_1 = 1;
     public static AlarmManager alarmManager;
+    TextView upcoming_events;
+    String maybe = "";
+
+    MediaPlayer mPlayer = new MediaPlayer();
+    TextView listViewTittle = null;
+    public static HashSet<Date> Mainevents;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,22 +72,101 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        //upcoming_events = (TextView)findViewById(R.id.upcoming_events);
         rec_float_button = (FloatingActionButton)findViewById(R.id.rec_float_button);
         today_button = (FloatingActionButton)findViewById(R.id.today_button);
         add_float_Button = (FloatingActionButton)findViewById(R.id.add_float_button);
         rec_float_button.setBackgroundTintList(ColorStateList.valueOf(0xff0000ff));
         today_button.setBackgroundTintList(ColorStateList.valueOf(0xff0000ff));
         add_float_Button.setBackgroundTintList(ColorStateList.valueOf(0xff0000ff));
+        listViewTittle = (TextView)findViewById(R.id.listViewTittle);
+        try
+        {
+            setNextAlarm();
+        }
+        catch (Exception e)
+        {
+
+        }
+
+        StringBuilder sb = new StringBuilder();
+        //sb.append("Upcoming Events \n");
+
 
         appdata.clear();
 
         appdata.addAll(read.FileInput());
-        Toast.makeText(this,("File Read" + appdata.size() + ""),Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this,("File Read" + appdata.size() + ""),Toast.LENGTH_SHORT).show();
         Date actualTime = new Date(System.currentTimeMillis());
-        Toast.makeText(this,"Current Time" + actualTime.toString(),Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this,"Current Time" + actualTime.toString(),Toast.LENGTH_SHORT).show();
+
+        int indexOfNext = 0;
+        int maxOfLines = 5;
+        for (int i=0; i < appdata.size(); i++)
+        {
+            if (appdata.get(i).getMilliTime() > System.currentTimeMillis())
+            {
+                indexOfNext = i;
+                break;
+            }
+        }
+
+        for (int i = indexOfNext; i < appdata.size(); i++)
+        {
+            sb.append(appdata.get(i).getTittle() + " - " + appdata.get(i).getCurDate().toString().substring(0,10) + "\n");
+            maxOfLines--;
+            if (maxOfLines == 0)
+            {
+                break;
+            }
+        }
+
+//        upcoming_events.setText(sb.toString());
+
+
+        HashSet<Date> events = new HashSet<>();
+        events.add(new Date());
+//        Mainevents = new HashSet<Date>();
+//        Mainevents.addAll(events);
+
+        for(int i = 0; i<appdata.size(); i++)
+        {
+            events.add(appdata.get(i).getCurDate());
+        }
+
+
+        CalendarView cv = ((CalendarView)findViewById(R.id.calendar_view));
+        cv.updateCalendar(events);
+        // assign event handler
+        cv.setEventHandler(new CalendarView.EventHandler()
+        {
+            @Override
+            public void onDayLongPress(Date date)
+            {
+                // show returned day
+                DateFormat df = SimpleDateFormat.getDateInstance();
+
+                String tempMaybe = df.format(date);
+
+                maybe = dateExtractor(tempMaybe);
+
+//                Toast.makeText(MainActivity.this, dateExtractor(tempMaybe), Toast.LENGTH_SHORT).show();
+//
+//                Intent intent = new Intent(MainActivity.this, MakeAppointment.class);
+//                intent.putExtra("MAYBE_MAIN",maybe);
+//                intent.putExtra("PATH_NAME_MAIN",PATH_NAME);
+//                startActivity(intent);
+                ArrayList<Appointment> selDayApt = new ArrayList<>();
+                selDayApt.addAll(Appointment.DayAppointments(maybe));
+
+                ListViewModifier(selDayApt);
 
 
 
+            }
+        });
+
+//         + "   " + year  df.format(date)month + "/" + day + "/" + year
 //        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
 //        fab.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -87,16 +183,95 @@ public class MainActivity extends AppCompatActivity {
         //tittle = (EditText)findViewById(R.id.tittle);
 
 
-        calendar = (CalendarView) findViewById(R.id.calendar);
-        calendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+//        calendar = (CalendarView) findViewById(R.id.calendar);
+//        calendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+//            @Override
+//            public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
+//                Toast.makeText(getApplicationContext(), dayOfMonth + "/" + month + "/" + year, Toast.LENGTH_LONG).show();
+//                //date = dayOfMonth + "/" + month + "/" + year;
+//
+//
+//            }
+//        });
+
+
+        //--------New Stuff----
+        ListViewModifier((ArrayList<Appointment>) Appointment.UpComingAppointments());
+//        ListViewModifier((ArrayList<Appointment>) appdata);
+
+//        FileIO read = new FileIO();
+//        final ArrayList<Appointment> aptdata = new ArrayList<>();
+//        aptdata.clear();
+//        aptdata.addAll(read.FileInput());
+//
+//        String[] aptArray = toArray(aptdata);
+//
+//        ListAdapter theAdapter = new ArrayAdapter<String>(this, R.layout.mytextview,aptArray);
+//
+//        ListView smallTheListView = (ListView) findViewById(R.id.smallTheListView);
+//
+//        smallTheListView.setAdapter(theAdapter);
+//
+//        smallTheListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+//
+//                StopPlayer();
+//
+//                playAudio(aptdata.get(i).getFileName());
+//            }
+//        });
+    }
+
+    public void ListViewModifier(final ArrayList<Appointment> tApt)
+    {
+        listViewTittle.setText(maybe);
+        String[] aptArray = toArray(tApt);
+        final int otherPostion;
+
+        ListAdapter theAdapter = new ArrayAdapter<String>(this, R.layout.mytextview,aptArray);
+
+        final ListView smallTheListView = (ListView) findViewById(R.id.smallTheListView);
+
+        smallTheListView.setAdapter(theAdapter);
+
+        smallTheListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
-                Toast.makeText(getApplicationContext(), dayOfMonth + "/" + month + "/" + year, Toast.LENGTH_LONG).show();
-                //date = dayOfMonth + "/" + month + "/" + year;
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
-
+                try
+                {
+                    if(mPlayer.isPlaying())
+                    {
+                        StopPlayer();
+                    }
+                    else{
+                        playAudio(tApt.get(i).getFileName());
+                    }
+                }
+                catch (Exception e)
+                {
+//                    Toast.makeText(MainActivity.this,"Slow Down, Old device detected",Toast.LENGTH_SHORT).show();
+//                    Intent crash = new Intent(MainActivity.this, MainActivity.class);
+//                    startActivity(crash);
+                }
             }
         });
+
+        smallTheListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+
+        @Override
+        public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
+            Toast.makeText(MainActivity.this,tApt.get(position).getTittle(),Toast.LENGTH_LONG).show();
+            DialogFragment myFragment = MyDialogFragment.newInstance(tApt.get(position).getMilliTime());
+
+            myFragment.show(getSupportFragmentManager(), "hello");
+
+//            smallTheListView.getItemAtPosition(position) + "");
+            return true;
+        }
+
+    });
     }
 
     @Override
@@ -122,15 +297,25 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void addAppointmentMethod(View view) {
-        Intent intent = new Intent(this, MakeAppointment.class);
-        intent.putExtra("PATH_NAME_MAIN",PATH_NAME);
-        startActivity(intent);
+        try {
+//            recorder.reset();
+            recorder.release();
+            Intent intent = new Intent(this, MakeAppointment.class);
+            intent.putExtra("MAYBE_MAIN",maybe);
+            intent.putExtra("PATH_NAME_MAIN",PATH_NAME);
+            startActivity(intent);
+        }
+        catch (Exception e)
+        {
+
+        }
+
 
     }
 
     public void quickRec(View view) {
         if (!recStatus) {
-            //recorder = new MediaRecorder();
+            recorder = new MediaRecorder();
             recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
             recorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
             recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
@@ -148,14 +333,23 @@ public class MainActivity extends AppCompatActivity {
         }
         else
         {
-            recorder.stop();
-            recorder.reset();
+            try
+            {
+                recorder.stop();
+                recorder.reset();
+            }
+            catch (Exception e)
+            {
+
+            }
             rec_float_button.setBackgroundTintList(ColorStateList.valueOf(0xff0000ff));
             recStatus = false;
+            recorder.release();
             Toast.makeText(this,"Recording Stopped",Toast.LENGTH_SHORT).show();
             Toast.makeText(this,PATH_NAME,Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(this, MakeAppointment.class);
             intent.putExtra("PATH_NAME_MAIN", PATH_NAME);
+            intent.putExtra("MAYBE_MAIN",maybe);
             startActivity(intent);
         }
         
@@ -188,9 +382,173 @@ public class MainActivity extends AppCompatActivity {
 
     public void showCurrentDate(View view) {
 
+        mPlayer.release();
+        recorder.release();
 
-        Intent today = new Intent(this,AppointmentView.class);
+
+        Intent today = new Intent(this,AppointmentListView.class);
         startActivity(today);
-        Toast.makeText(this,"Current Date",Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this,"Current Date",Toast.LENGTH_SHORT).show();
     }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+//        System.exit(0);
+    }
+
+    public static String dateExtractor(String datExc)
+    {
+        datExc = datExc.replace(", ", " ");
+        String[] spl = datExc.split(" ");
+        int year = Integer.parseInt(spl[2]);
+        int day = Integer.parseInt(spl[1]);
+        int month = 0;
+        spl[0] = spl[0].toLowerCase();
+
+        if (spl[0].equals("jan"))
+        {
+            month = 1;
+        }
+        else if (spl[0].equals("feb"))
+        {
+            month = 2;
+        }
+        else if (spl[0].equals("mar"))
+        {
+            month = 3;
+        }
+        else if (spl[0].equals("apr"))
+        {
+            month = 4;
+        }
+        else if (spl[0].equals("may"))
+        {
+            month = 5;
+        }
+        else if (spl[0].equals("jun"))
+        {
+            month = 6;
+        }
+        else if (spl[0].equals("jul"))
+        {
+            month = 7;
+        }
+        else if (spl[0].equals("aug"))
+        {
+            month = 8;
+        }
+        else if (spl[0].equals("sep"))
+        {
+            month = 9;
+        }
+        else if (spl[0].equals("oct"))
+        {
+            month = 10;
+        }
+        else if (spl[0].equals("nov"))
+        {
+            month = 11;
+        }
+        else if (spl[0].equals("dec"))
+        {
+            month = 12;
+        }
+        else
+        {
+            //Toast.makeText(MainActivity.this,"Error",Toast.LENGTH_SHORT).show();
+        }
+
+        return month + "/" + day + "/" + year;
+    }
+
+
+    // -------New Stuff-----
+    private static String[] toArray(ArrayList<Appointment> tempList)
+    {
+        String[] bar = new String[tempList.size()];
+        for (int i = 0; i<tempList.size() ; i++)
+        {
+            if (tempList.get(i).getFileName().equals(""))
+            {
+                bar[i] = tempList.get(i).getTittle() + tempList.get(i).shortStringDate();
+            }
+            else
+            {
+                bar[i] = tempList.get(i).getTittle() + tempList.get(i).shortStringDate() + " (REC)" ;
+            }
+
+        }
+        return bar;
+    }
+
+    private void playAudio(String filePath)
+    {
+
+        if (filePath.equals(""))
+        {
+            Toast.makeText(this,"No Recording",Toast.LENGTH_SHORT).show();
+        }
+        else
+        {
+            try {
+                mPlayer.setDataSource(filePath);
+                mPlayer.prepare();
+                mPlayer.start();
+                Toast.makeText(this,"Playing Recording",Toast.LENGTH_SHORT).show();
+//                temp_float_button.setImageDrawable(stopDrawable);
+
+            } catch (IOException e) {
+                //Log.e(LOG_TAG, "prepare() failed");
+            }
+        }
+    }
+
+    public void StopPlayer() {
+
+        if (mPlayer.isPlaying())
+        {
+//            mPlayer.stop();
+            mPlayer.release();
+//            mPlayer.reset();
+            mPlayer = new MediaPlayer();
+        }
+
+
+
+//        temp_float_button.setImageDrawable(playDrawable);
+
+
+    }
+
+    public void StopPlayerNow(View view) {
+        StopPlayer();
+        Toast.makeText(this,"Playback Stopped", Toast.LENGTH_SHORT).show();
+    }
+    public void setNextAlarm() {
+//        long currentTime = System.currentTimeMillis();
+//        if (targetCal < currentTime && targetCal > 0) {
+//            //do Nothing
+//            return;
+//        } else {
+        long targetCal = 6;
+        List<Long> alarms = new ArrayList<Long>();
+        alarms.clear();
+        alarms.addAll(FileIO.AlarmSaveIn());
+        alarms.add(targetCal);
+        FileIO.AlarmSaveOut(alarms);
+        alarms.clear();
+        alarms.addAll(FileIO.AlarmSaveIn());
+
+
+//            info.setText("\n\n***\n"
+//                    + "Alarm is set@ " + targetCal.getTime() + "\n"
+//                    + "***\n");  getBaseContext()
+        Intent intent = new Intent(this, AlarmReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getBaseContext(), RQS_1, intent, 0);
+        alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, alarms.get(0), pendingIntent);
+    }
+
+
 }

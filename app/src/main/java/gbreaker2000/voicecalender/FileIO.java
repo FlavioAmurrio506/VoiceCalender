@@ -11,6 +11,8 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -60,6 +62,7 @@ public class FileIO {
 
     public static void FileOutput(List<Appointment> outdata)
     {
+        Collections.sort(outdata);
         String fileName = getFilePathData();
         //String [][] temp = array;
         PrintWriter outputStream = null;
@@ -95,9 +98,94 @@ public class FileIO {
         return(file.getAbsolutePath() + "/" + "appointdata.txt");
     }
 
-//    public static List<Appointment> sortData(List<Appointment> data)
-//    {
-//
-//    }
+    private static String getFilePathDataAlarm()
+    {
+        String filePath = Environment.getExternalStorageDirectory().getPath();
+        File file = new File(filePath,"VoiceCalendarAudio");
+        if(!file.exists())
+            file.mkdir();
+        return(file.getAbsolutePath() + "/" + "alarms.txt");
+    }
+
+    public static List<Long> AlarmSaveIn()
+    {
+        List<Long> inputData = new ArrayList<>();
+        try
+        {
+            FileInputStream fstream = new FileInputStream(getFilePathDataAlarm());
+            DataInputStream in = new DataInputStream(fstream);
+            BufferedReader br = new BufferedReader(new InputStreamReader(in));
+            String strLine;
+
+            while ((strLine = br.readLine()) != null)
+            {
+                inputData.add(Long.parseLong(strLine));
+            }
+        }
+
+        catch (Exception e)
+        {
+            //Catch exception if any
+            System.err.println("Error: " + e.getMessage());
+        }
+        Collections.sort(inputData);
+//        AlarmSaveOut(inputData);
+
+        long curTime = System.currentTimeMillis();
+        for(int i = 0; i<inputData.size(); i++)
+        {
+            if(inputData.get(i)<curTime)
+            {
+                inputData.remove(i);
+            }
+            else if (inputData.get(i)>curTime)
+            {
+//                break;
+            }
+        }
+
+        if (inputData.size()<1)
+        {
+            inputData.add(new Date(2030-1900,8,23).getTime());
+        }
+        Collections.sort(inputData);
+        return inputData;
+    }//End FileInput Method
+
+    public static void AlarmSaveOut(List<Long> outdatain)
+    {
+        ArrayList<Long> outdata = new ArrayList<>();
+        outdata.addAll(outdatain);
+        Collections.sort(outdata);
+        long curTime = System.currentTimeMillis();
+        String fileName = getFilePathDataAlarm();
+        //String [][] temp = array;
+        PrintWriter outputStream = null;
+        long birth = new Date(2030-1900, 9-1, 23).getTime();
+
+        try
+        {
+            outputStream = new PrintWriter(fileName);// create  the file
+        }
+        catch (FileNotFoundException e)
+        {
+            System.out.println ("Error opening the file " + fileName);// if there is  no possible to create  the file
+            System.exit (0);
+        }
+        if (outdata.size() < 1) {outdata.add(birth);}
+        for (int i = 0; i < outdata.size(); i++)
+        {
+            if (outdata.get(i)>curTime)
+            {
+                outputStream.println(outdata.get(i));
+            }
+
+        }//end for loop
+        outputStream.close();// close the file
+        //System.out.println("Those lines were written to " + fileName);
+
+    }
+
+
 
 }//End FileIO Class

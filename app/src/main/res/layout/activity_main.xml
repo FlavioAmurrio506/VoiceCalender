@@ -23,6 +23,13 @@
 
     <include layout="@layout/content_main" />
 
+    <!--<gbreaker2000.voicecalender.CalendarView-->
+        <!--xmlns:calendarNS="http://schemas.android.com/apk/res/gbreaker2000.voicecalender"-->
+        <!--android:id="@+id/calendar_view"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--calendarNS:dateFormat="MMMM yyyy"/>-->
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/add_float_button"
         android:layout_width="wrap_content"
@@ -46,7 +53,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center"
         android:layout_margin="@dimen/fab_margin"
-        android:src="@drawable/alpha_target"
+        android:src="@drawable/apt_icon"
         android:onClick="showCurrentDate"/>
 
 </android.support.design.widget.CoordinatorLayout>

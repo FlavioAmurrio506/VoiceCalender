@@ -1,5 +1,6 @@
 package gbreaker2000.voicecalender;
 
+import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.FragmentTransaction;
 import android.app.PendingIntent;
@@ -20,14 +21,17 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.Toast;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 public class MakeAppointment extends AppCompatActivity {
 
@@ -53,11 +57,36 @@ public class MakeAppointment extends AppCompatActivity {
     Drawable stopRecDrawable = null;
     Appointment[] appointment = new Appointment[100];
     public static int appointmentIndex = 0;
+    String prevDate = "";
+    Spinner reminder_int = null;
+    FileIO fileio = new FileIO();
+    ArrayList<Appointment> aptdata = null;
+
+    final static int RQS_1 = 1;
+    public static AlarmManager alarmManager;
     //private int curFormat = 0;
     //private String fileExt[] = {".mp4", ".3gpp"};
     //private int opFormats[] = {MediaRecorder.OutputFormat.MPEG_4, MediaRecorder.OutputFormat.THREE_GPP};
 
 
+    @Override
+    public void onBackPressed() {
+
+        try {
+            Intent gotoMain = new Intent(this, MainActivity.class);
+            gotoMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(gotoMain);
+            finish();
+//            Toast.makeText(this,"Press Cancel!",Toast.LENGTH_SHORT).show();
+//            Intent gotoMain = new Intent(this, MainActivity.class);
+//            startActivity(gotoMain);
+//            super.onBackPressed();
+        }
+        catch (Exception e)
+        {
+
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,8 +95,26 @@ public class MakeAppointment extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        aptdata = new ArrayList<>();
+        aptdata.clear();
+        aptdata.addAll(fileio.FileInput());
+
         Intent activityThatCalled = getIntent();
         String previousActivity = activityThatCalled.getExtras().getString("PATH_NAME_MAIN");
+        prevDate = activityThatCalled.getExtras().getString("MAYBE_MAIN");
+        if (prevDate.equals(null))
+        {
+            prevDate = "";
+        }
+        if (prevDate.equals(""))
+        {
+            final Calendar c = Calendar.getInstance();
+            int year = c.get(Calendar.YEAR);
+            int month = c.get(Calendar.MONTH);
+            int day = c.get(Calendar.DAY_OF_MONTH);
+            prevDate = (month+1) + "/" + day + "/" + year;
+        }
+
         file_location = (EditText)findViewById(R.id.file_location);
         file_location.setText(previousActivity);
         PATH_NAME = previousActivity;
@@ -104,6 +151,15 @@ public class MakeAppointment extends AppCompatActivity {
         stopRecDrawable = stop_rec_image.getDrawable();
         rec_float_button_make.setBackgroundTintList(ColorStateList.valueOf(0xff0000ff));
         play_float_button_make.setBackgroundTintList(ColorStateList.valueOf(0xff0000ff));
+        appointment_start.setText(prevDate);
+        reminder_int = (Spinner)findViewById(R.id.reminder_int);
+
+//        appointment_start.setTag(appointment_start.getKeyListener());
+//        appointment_end.setTag(appointment_end.getKeyListener());
+//
+//        appointment_start.setKeyListener(null);
+//        appointment_end.setKeyListener(null);
+
 
 
 
@@ -159,6 +215,9 @@ public class MakeAppointment extends AppCompatActivity {
 //    }
 
     public void cancelAppoint(View view) {
+        Intent gotoMain = new Intent(this, MainActivity.class);
+        gotoMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(gotoMain);
         finish();
 //        Intent cancel = new Intent(this, MakeAppointment.class);
 //        startActivity(cancel);
@@ -181,40 +240,94 @@ public class MakeAppointment extends AppCompatActivity {
         tempsave.setFileName(PATH_NAME);
         tempsave.setLocation(location.getText().toString());
         tempsave.setNotes(reminder.getText().toString());
+        tempsave.setReminderInterval(reminder_int.getSelectedItem().toString());
 
 
-        if(tempsave.getMilliTime() > System.currentTimeMillis())
+//        if(tempsave.getMilliTime() > System.currentTimeMillis())
+//        {
+//            setAlarm(tempsave.getMilliTime());
+//            Toast.makeText(getApplicationContext(),"Alarm Set for " + tempsave.getCurDate().toString(), Toast.LENGTH_SHORT).show();
+//            MainActivity.appdata.add(tempsave);
+//            FileIO fileio = new FileIO();
+//            fileio.FileOutput(MainActivity.appdata);
+//
+//            Intent save = new Intent(this,MainActivity.class);
+//            //this.appointmentIndex++;
+//            startActivity(save);
+//            Toast.makeText(getApplicationContext(),"Save Button " + MainActivity.appdata.size(), Toast.LENGTH_LONG).show();
+//        }
+//        else
+//        {
+//            Toast.makeText(getApplicationContext(),"Time Before Today", Toast.LENGTH_SHORT).show();
+//        }
+
+
+        setAlarm(tempsave.getMilliTime());
+        if (Integer.parseInt(reminder_int.getSelectedItem().toString()) != 0)
         {
-            setAlarm(tempsave.getMilliTime());
-            Toast.makeText(getApplicationContext(),"Alarm Set for " + tempsave.getCurDate().toString(), Toast.LENGTH_SHORT).show();
-            MainActivity.appdata.add(tempsave);
-            FileIO fileio = new FileIO();
-            fileio.FileOutput(MainActivity.appdata);
-
-            Intent save = new Intent(this,MainActivity.class);
-            //this.appointmentIndex++;
-            startActivity(save);
-            Toast.makeText(getApplicationContext(),"Save Button " + MainActivity.appdata.size(), Toast.LENGTH_LONG).show();
+            setAlarm(tempsave.getMilliTime() - (Integer.parseInt(reminder_int.getSelectedItem().toString()) * 60 * 1000));
         }
-        else
+        aptdata.add(tempsave);
+
+        fileio.FileOutput(aptdata);
+        try
         {
-            Toast.makeText(getApplicationContext(),"Time Before Today", Toast.LENGTH_SHORT).show();
+            if (mPlayer.isPlaying())
+            {
+                mPlayer.stop();
+//            mPlayer.release();
+                mPlayer.reset();}
+        }
+        catch (Exception e)
+        {
+
         }
 
+//        Intent save = new Intent(this,MainActivity.class);
+//        //this.appointmentIndex++;
+//        startActivity(save);
+
+        try
+        {
+            mPlayer.release();
+        }
+        catch (Exception e)
+        {
+
+        }
+
+        Intent gotoMain = new Intent(this, MainActivity.class);
+        gotoMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(gotoMain);
+        finish();
 
     }
 
-    private void setAlarm(long targetCal){
+    public void setAlarm(long targetCal) {
+//        long currentTime = System.currentTimeMillis();
+//        if (targetCal < currentTime && targetCal > 0) {
+//            //do Nothing
+//            return;
+//        } else {
+            List<Long> alarms = new ArrayList<Long>();
+            alarms.clear();
+            alarms.addAll(FileIO.AlarmSaveIn());
+            alarms.add(targetCal);
+            FileIO.AlarmSaveOut(alarms);
+        alarms.clear();
+        alarms.addAll(FileIO.AlarmSaveIn());
+
 
 
 //            info.setText("\n\n***\n"
 //                    + "Alarm is set@ " + targetCal.getTime() + "\n"
 //                    + "***\n");  getBaseContext()
-        Intent intent = new Intent(this, AlarmReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(getBaseContext(), MainActivity.RQS_1, intent, 0);
-        MainActivity.alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
-        MainActivity.alarmManager.set(AlarmManager.RTC_WAKEUP, targetCal, pendingIntent);
-    }
+            Intent intent = new Intent(this, AlarmReceiver.class);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(getBaseContext(), RQS_1, intent, 0);
+            alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+            alarmManager.set(AlarmManager.RTC_WAKEUP, alarms.get(0), pendingIntent);
+        }
+
 
     public void startRecording(View view) {
         //Toast.makeText(getApplicationContext(),"Recording", Toast.LENGTH_LONG).show();
