@@ -274,7 +274,7 @@ public class Appointment implements Comparable<Appointment>{
 
     public static List<Appointment> UpComingAppointments()
     {
-        long curTime = System.currentTimeMillis();
+        long curTime = System.currentTimeMillis()-(24*60*60*1000);
 
 
         FileIO fileIO = new FileIO();

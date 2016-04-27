@@ -251,9 +251,9 @@ public class MainActivity extends AppCompatActivity {
                 }
                 catch (Exception e)
                 {
-                    Toast.makeText(MainActivity.this,"Slow Down, Old device detected",Toast.LENGTH_SHORT).show();
-                    Intent crash = new Intent(MainActivity.this, MainActivity.class);
-                    startActivity(crash);
+//                    Toast.makeText(MainActivity.this,"Slow Down, Old device detected",Toast.LENGTH_SHORT).show();
+//                    Intent crash = new Intent(MainActivity.this, MainActivity.class);
+//                    startActivity(crash);
                 }
             }
         });
@@ -508,10 +508,10 @@ public class MainActivity extends AppCompatActivity {
 
         if (mPlayer.isPlaying())
         {
-            mPlayer.stop();
-//            mPlayer.release();
-            mPlayer.reset();
-            //mPlayer = new MediaPlayer();
+//            mPlayer.stop();
+            mPlayer.release();
+//            mPlayer.reset();
+            mPlayer = new MediaPlayer();
         }
 
 

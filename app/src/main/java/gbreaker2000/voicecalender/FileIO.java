@@ -62,6 +62,7 @@ public class FileIO {
 
     public static void FileOutput(List<Appointment> outdata)
     {
+        Collections.sort(outdata);
         String fileName = getFilePathData();
         //String [][] temp = array;
         PrintWriter outputStream = null;
@@ -139,7 +140,7 @@ public class FileIO {
             }
             else if (inputData.get(i)>curTime)
             {
-                break;
+//                break;
             }
         }
 
@@ -147,6 +148,7 @@ public class FileIO {
         {
             inputData.add(new Date(2030-1900,8,23).getTime());
         }
+        Collections.sort(inputData);
         return inputData;
     }//End FileInput Method
 
@@ -154,6 +156,7 @@ public class FileIO {
     {
         ArrayList<Long> outdata = new ArrayList<>();
         outdata.addAll(outdatain);
+        Collections.sort(outdata);
         long curTime = System.currentTimeMillis();
         String fileName = getFilePathDataAlarm();
         //String [][] temp = array;

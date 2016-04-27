@@ -61,16 +61,16 @@ public class AlarmReminderScreen extends AppCompatActivity {
         stopDrawable = getResources().getDrawable(R.drawable.alpha_stop);
         alarmSound = MediaPlayer.create(this, R.raw.morning);
 
-        FileIO read = new FileIO();
-
-        looker= new ArrayList<>();
-        looker.clear();
-        looker.addAll(read.FileInput());
-
-
+//        FileIO read = new FileIO();
+//
+//      looker= new ArrayList<>();
+//        looker.clear();
+        //       looker.addAll(read.FileInput());
 
 
-        for (int i = 0; i<looker.size(); i++)
+
+
+ /*       for (int i = 0; i<looker.size(); i++)
         {
             looker.get(i).setMilliSec();
             if(looker.get(i).getMilliTime()>System.currentTimeMillis())
@@ -84,19 +84,35 @@ public class AlarmReminderScreen extends AppCompatActivity {
         {
             indexOfItem = 0;
         }
-
+*/
 //        if(found.equals(looker.get(indexOfItem)))
 //        {
 //            looker.set(indexOfItem, found);
 //        }
 
-        try {
+        /*try {
 
             sb.append("Tittle: " + looker.get(indexOfItem).getTittle() + "\n");
             sb.append("Date: " + looker.get(indexOfItem).getStartDate() + "\n");
             sb.append("Time: " + looker.get(indexOfItem).getStartTime() + "\n");
             sb.append("Location: " + looker.get(indexOfItem).getLocation() + "\n");
             sb.append("Notes: " + looker.get(indexOfItem).getNotes() + "\n");
+            alarm_info.setText(sb.toString());
+//            Toast.makeText(this, "" + looker.get(indexOfItem - 1).getTittle() + "", Toast.LENGTH_LONG).show();
+        }
+
+
+        catch (Exception e)
+        {
+
+        }*/
+        try {
+
+            sb.append("Tittle: " + found.getTittle() + "\n");
+            sb.append("Date: " + found.getStartDate() + "\n");
+            sb.append("Time: " + found.getStartTime() + "\n");
+            sb.append("Location: " + found.getLocation() + "\n");
+            sb.append("Notes: " + found.getNotes() + "\n");
             alarm_info.setText(sb.toString());
 //            Toast.makeText(this, "" + looker.get(indexOfItem - 1).getTittle() + "", Toast.LENGTH_LONG).show();
         }
@@ -121,8 +137,8 @@ public class AlarmReminderScreen extends AppCompatActivity {
 //            } catch (IOException e) {
 //                //Log.e(LOG_TAG, "prepare() failed");
 //            }
-            looker.get(indexOfItem).setAllDay(true);
-            read.FileOutput(looker);
+          /*  looker.get(indexOfItem).setAllDay(true);
+            read.FileOutput(looker);*/
 
 //        }
 //        while(1==1)
@@ -172,7 +188,7 @@ public class AlarmReminderScreen extends AppCompatActivity {
 //            }
 //        }
 
-        if(looker.get(indexOfItem).getFileName().equals(""))
+        if(found.getFileName().equals(""))
         {
             ars_play_buttton.setVisibility(View.GONE);
         }
@@ -195,7 +211,7 @@ public class AlarmReminderScreen extends AppCompatActivity {
         }
 //        alarmSound.release();
 //        alarmSound = new MediaPlayer();
-            }
+    }
 
     public void stopReceiver(View view) {
         stopReceiver();
@@ -271,7 +287,7 @@ public class AlarmReminderScreen extends AppCompatActivity {
 //        int toHR = today.getHours();
 //        int toMin = today.getMinutes();
 //        int day,year,month,hour,min;
-        long milliMin = 2*60*1000;
+        long milliMin = 1*60*1000;
         Date secondpass = new Date();
         long secondLong = 0;
         Date test = new Date();
@@ -283,7 +299,8 @@ public class AlarmReminderScreen extends AppCompatActivity {
         {
             found = search.get(i);
             test = found.dateObjGet();
-            if ((test.getTime()-(32*60*1000))>today.getTime() && (test.getTime()+(2*60*1000))>today.getTime())
+            secondLong = test.getTime();
+            if ((secondLong-(32*60*1000))<secToday && (secondLong+(2*60*1000))>secToday)
             {
                 possible.add(found);
             }
@@ -359,5 +376,5 @@ public class AlarmReminderScreen extends AppCompatActivity {
         alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         alarmManager.set(AlarmManager.RTC_WAKEUP, alarms.get(0), pendingIntent);
     }
-    }
+}
 
