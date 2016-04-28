@@ -44,7 +44,7 @@ public class FileIO {
         return inputData;
     }//End FileInput Method
 
-    public static Appointment stringToAppointment(String data)
+    public static Appointment stringToAppointment(String data) throws Exception
     {
         String[] parts = data.split(",");
         Appointment tempApp = new Appointment();
@@ -185,6 +185,37 @@ public class FileIO {
         //System.out.println("Those lines were written to " + fileName);
 
     }
+
+    public static HashSet<Date> HashInput()
+    {
+        List<Appointment> inputData = new ArrayList<>();
+        HashSet<Date> hashOut= new HashSet<>();
+        hashOut.clear();
+        try
+        {
+            FileInputStream fstream = new FileInputStream(getFilePathData());
+            DataInputStream in = new DataInputStream(fstream);
+            BufferedReader br = new BufferedReader(new InputStreamReader(in));
+            String strLine;
+
+            while ((strLine = br.readLine()) != null)
+            {
+                inputData.add(stringToAppointment(strLine));
+            }
+        }
+
+        catch (Exception e)
+        {
+            //Catch exception if any
+            System.err.println("Error: " + e.getMessage());
+        }
+        Collections.sort(inputData);
+        for(int i = 0; i<inputData.size();i++)
+        {
+            hashOut.add(inputData.get(i).dateObjGet());
+        }
+        return hashOut;
+    }//End FileInput Method
 
 
 

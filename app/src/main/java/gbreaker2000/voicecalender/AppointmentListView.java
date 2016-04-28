@@ -34,7 +34,7 @@ public class AppointmentListView extends AppCompatActivity {
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_appointment_list_view);
 //        temp_float_button = (FloatingActionButton)findViewById(R.id.temp_float_button);
@@ -65,7 +65,14 @@ public class AppointmentListView extends AppCompatActivity {
 //        aptdata.addAll(read.FileInput());
 //        aptdata.addAll((ArrayList<Appointment>) Appointment.UpComingAppointments());
         aptdata.addAll(FileIO.FileInput());
-        String[] aptArray = toArray(aptdata);
+        String[] aptArray = new String[0];
+        try {
+            aptArray = toArray(aptdata);
+        }
+        catch (Exception e)
+        {
+
+        }
 
         ListAdapter theAdapter = new ArrayAdapter<String>(this, R.layout.mytextview,aptArray);
 
@@ -132,7 +139,7 @@ public class AppointmentListView extends AppCompatActivity {
 
             }
 
-    private static String[] toArray(ArrayList<Appointment> tempList)
+    private static String[] toArray(ArrayList<Appointment> tempList) throws Exception
     {
         String[] bar = new String[tempList.size()];
         for (int i = 0; i<tempList.size() ; i++)

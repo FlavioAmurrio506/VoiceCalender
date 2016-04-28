@@ -78,7 +78,8 @@ public class Appointment implements Comparable<Appointment>{
         return startDate;
     }
 
-    public void setStartDate(String startDate) {
+    public void setStartDate(String startDate) throws Exception
+    {
         if (!startDate.equals(""))
         {
             this.startDate = startDate;
@@ -90,7 +91,8 @@ public class Appointment implements Comparable<Appointment>{
         return startTime;
     }
 
-    public void setStartTime(String startTime) {
+    public void setStartTime(String startTime) throws Exception
+    {
         if(!startTime.equals(""))
         {
             this.startTime = startTime;
@@ -173,7 +175,7 @@ public class Appointment implements Comparable<Appointment>{
         return curDate.toString();
     }
 
-    public String shortStringDate()
+    public String shortStringDate() throws Exception
     {
         this.setMilliSec();
         String min;
@@ -188,7 +190,7 @@ public class Appointment implements Comparable<Appointment>{
         return " (" + (curDate.getMonth()+1) + "/" + curDate.getDate() + "/" + (curDate.getYear()-100)  + ") (" + curDate.getHours() + ":" + min + ") ";
     }
 
-    public void setMilliSec()
+    public void setMilliSec () throws Exception
     {
         int year;
         int month ;
@@ -202,6 +204,15 @@ public class Appointment implements Comparable<Appointment>{
         String[] tempHour = this.getStartTime().split(":");
         hour = Integer.parseInt(tempHour[0]);
         minute = Integer.parseInt(tempHour[1]);
+        if(hour>24 || hour<0)
+        {
+            throw new Exception();
+        }
+        if(minute>59 ||  minute<0)
+        {
+            throw new Exception();
+        }
+
         Date cal = new Date(year-1900, month-1, day);
         cal.setHours(hour);
         cal.setMinutes(minute);
@@ -217,7 +228,15 @@ public class Appointment implements Comparable<Appointment>{
 
     public Date dateObjGet()
     {
-        setMilliSec();
+
+        try
+        {
+            setMilliSec();
+        }
+        catch (Exception e)
+        {
+
+        }
         return this.curDate;
     }
 
@@ -282,7 +301,7 @@ public class Appointment implements Comparable<Appointment>{
         return todayApt;
     }
 
-    public static List<Appointment> UpComingAppointments()
+    public static List<Appointment> UpComingAppointments() throws Exception
     {
         long curTime = System.currentTimeMillis()-(24*60*60*1000);
 

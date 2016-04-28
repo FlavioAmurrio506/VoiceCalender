@@ -144,7 +144,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         final CalendarView cv = ((CalendarView)findViewById(R.id.calendar_view));
-        cv.updateCalendar(events);
+        cv.updateCalendar(FileIO.HashInput());
         // assign event handler
         cv.setEventHandler(new CalendarView.EventHandler()
         {
@@ -167,7 +167,13 @@ public class MainActivity extends AppCompatActivity {
                 ArrayList<Appointment> selDayApt = new ArrayList<>();
                 selDayApt.addAll(Appointment.DayAppointments(maybe));
 
-                ListViewModifier(selDayApt);
+                try {
+                    ListViewModifier(selDayApt);
+                }
+                catch (Exception e)
+                {
+
+                }
 
 
 
@@ -206,7 +212,13 @@ public class MainActivity extends AppCompatActivity {
 
 
         //--------New Stuff----
-        ListViewModifier((ArrayList<Appointment>) Appointment.UpComingAppointments());
+        try {
+            ListViewModifier((ArrayList<Appointment>) Appointment.UpComingAppointments());
+        }
+        catch (Exception e)
+        {
+
+        }
 //        ListViewModifier((ArrayList<Appointment>) appdata);
 
 //        FileIO read = new FileIO();
@@ -253,12 +265,12 @@ public class MainActivity extends AppCompatActivity {
 //
 //            }
 //        });
-//
+
     }
 
 
 
-    public void ListViewModifier(final ArrayList<Appointment> tApt)
+    public void ListViewModifier(final ArrayList<Appointment> tApt) throws Exception
     {
         listViewTittle.setText(maybe);
         String[] aptArray = toArray(tApt);
@@ -269,6 +281,7 @@ public class MainActivity extends AppCompatActivity {
         final ListView smallTheListView = (ListView) findViewById(R.id.smallTheListView);
 
         smallTheListView.setAdapter(theAdapter);
+//        Toast.makeText(this."hello",Toast.LENGTH_LONG).show();
 
         smallTheListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -499,7 +512,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     // -------New Stuff-----
-    private static String[] toArray(ArrayList<Appointment> tempList)
+    private static String[] toArray(ArrayList<Appointment> tempList) throws Exception
     {
         String[] bar = new String[tempList.size()];
         for (int i = 0; i<tempList.size() ; i++)

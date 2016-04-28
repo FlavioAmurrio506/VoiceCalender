@@ -228,19 +228,20 @@ public class MakeAppointment extends AppCompatActivity {
 
     public void saveAppoint(View view) {
 
-        Appointment tempsave = new Appointment();
-        tempsave.setTittle(tittle.getText().toString());
-        tempsave.setStartDate(appointment_start.getText().toString());
-        tempsave.setStartTime(appointment_end.getText().toString());
-        //tempsave.setEndDate(appointment_end.getText().toString());
-        //tempsave.setEndDate(null);
-        //tempsave.setEndTime(null);
-        //tempsave.setEndTime(appointment_end.getText().toString());
-        tempsave.setAllDay(all_day.isChecked());
-        tempsave.setFileName(PATH_NAME);
-        tempsave.setLocation(location.getText().toString());
-        tempsave.setNotes(reminder.getText().toString());
-        tempsave.setReminderInterval(reminder_int.getSelectedItem().toString());
+        try {
+            Appointment tempsave = new Appointment();
+            tempsave.setTittle(tittle.getText().toString());
+            tempsave.setStartDate(appointment_start.getText().toString());
+            tempsave.setStartTime(appointment_end.getText().toString());
+            //tempsave.setEndDate(appointment_end.getText().toString());
+            //tempsave.setEndDate(null);
+            //tempsave.setEndTime(null);
+            //tempsave.setEndTime(appointment_end.getText().toString());
+            tempsave.setAllDay(all_day.isChecked());
+            tempsave.setFileName(PATH_NAME);
+            tempsave.setLocation(location.getText().toString());
+            tempsave.setNotes(reminder.getText().toString());
+            tempsave.setReminderInterval(reminder_int.getSelectedItem().toString());
 
 
 //        if(tempsave.getMilliTime() > System.currentTimeMillis())
@@ -262,44 +263,43 @@ public class MakeAppointment extends AppCompatActivity {
 //        }
 
 
-        setAlarm(tempsave.getMilliTime());
-        if (Integer.parseInt(reminder_int.getSelectedItem().toString()) != 0)
-        {
-            setAlarm(tempsave.getMilliTime() - (Integer.parseInt(reminder_int.getSelectedItem().toString()) * 60 * 1000));
-        }
-        aptdata.add(tempsave);
+            setAlarm(tempsave.getMilliTime());
+            if (Integer.parseInt(reminder_int.getSelectedItem().toString()) != 0) {
+                setAlarm(tempsave.getMilliTime() - (Integer.parseInt(reminder_int.getSelectedItem().toString()) * 60 * 1000));
+            }
+            aptdata.add(tempsave);
 
-        fileio.FileOutput(aptdata);
-        try
-        {
-            if (mPlayer.isPlaying())
-            {
-                mPlayer.stop();
+            fileio.FileOutput(aptdata);
+            try {
+                if (mPlayer.isPlaying()) {
+                    mPlayer.stop();
 //            mPlayer.release();
-                mPlayer.reset();}
-        }
-        catch (Exception e)
-        {
+                    mPlayer.reset();
+                }
+            } catch (Exception e) {
 
-        }
+            }
 
 //        Intent save = new Intent(this,MainActivity.class);
 //        //this.appointmentIndex++;
 //        startActivity(save);
 
-        try
-        {
-            mPlayer.release();
+            try {
+                mPlayer.release();
+            } catch (Exception e) {
+
+            }
+
+            Intent gotoMain = new Intent(this, MainActivity.class);
+            gotoMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(gotoMain);
+            finish();
+
         }
         catch (Exception e)
         {
-
+            Toast.makeText(this,"Invalid date/time",Toast.LENGTH_SHORT).show();
         }
-
-        Intent gotoMain = new Intent(this, MainActivity.class);
-        gotoMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(gotoMain);
-        finish();
 
     }
 
