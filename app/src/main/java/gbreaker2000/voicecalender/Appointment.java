@@ -204,7 +204,7 @@ public class Appointment implements Comparable<Appointment>{
         String[] tempHour = this.getStartTime().split(":");
         hour = Integer.parseInt(tempHour[0]);
         minute = Integer.parseInt(tempHour[1]);
-        if(hour>24 || hour<0)
+        if(hour>23 || hour<0)
         {
             throw new Exception();
         }
