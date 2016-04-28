@@ -201,6 +201,12 @@ public class Appointment implements Comparable<Appointment>{
         month = Integer.parseInt(tempdate[0]);
         day = Integer.parseInt(tempdate[1]);
         year = Integer.parseInt(tempdate[2]);
+        if (month<0 || month>12|| day<0 || day>31 || year<1970 || year>2200)
+        {
+            throw new Exception();
+        }
+
+
         String[] tempHour = this.getStartTime().split(":");
         hour = Integer.parseInt(tempHour[0]);
         minute = Integer.parseInt(tempHour[1]);
