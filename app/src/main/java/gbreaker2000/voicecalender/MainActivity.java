@@ -579,14 +579,14 @@ public class MainActivity extends AppCompatActivity {
 //            //do Nothing
 //            return;
 //        } else {
-        long targetCal = 6;
-        List<Long> alarms = new ArrayList<Long>();
-        alarms.clear();
-        alarms.addAll(FileIO.AlarmSaveIn());
-        alarms.add(targetCal);
-        FileIO.AlarmSaveOut(alarms);
-        alarms.clear();
-        alarms.addAll(FileIO.AlarmSaveIn());
+//        long targetCal = 6;
+//        List<Long> alarms = new ArrayList<Long>();
+//        alarms.clear();
+//        alarms.addAll(FileIO.AlarmSaveIn());
+//        alarms.add(targetCal);
+//        FileIO.AlarmSaveOut(alarms);
+//        alarms.clear();
+//        alarms.addAll(FileIO.AlarmSaveIn());
 
 
 //            info.setText("\n\n***\n"
@@ -595,7 +595,11 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, AlarmReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(getBaseContext(), RQS_1, intent, 0);
         alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, alarms.get(0), pendingIntent);
+        try {
+            alarmManager.set(AlarmManager.RTC_WAKEUP, FileIO.nextAlarm(), pendingIntent);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 

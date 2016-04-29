@@ -32,7 +32,7 @@ public class Appointment implements Comparable<Appointment>{
         fileName = "";
         location = "";
         notes = "";
-        allDay = false;
+        allDay = true;
         //curAppoint = new Date();
     }
 
@@ -46,7 +46,7 @@ public class Appointment implements Comparable<Appointment>{
         fileName = "";
         location = "";
         notes = "";
-        allDay = false;
+        allDay = true;
         //curAppoint = new Date();
     }
 

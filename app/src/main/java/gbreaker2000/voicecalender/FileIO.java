@@ -217,6 +217,30 @@ public class FileIO {
         return hashOut;
     }//End FileInput Method
 
+    public static long nextAlarm()  throws Exception{
+        long currentMilli = System.currentTimeMillis();
+        HashSet<Long> nextAlarm = new HashSet<>();
+        ArrayList<Appointment> appDate = new ArrayList<>();
+        appDate.addAll(FileInput());
+        for(int i = 0; i<appDate.size(); i++) {
+            if (appDate.get(i).isAllDay()) {
+                appDate.get(i).setMilliSec();
+                nextAlarm.add(appDate.get(i).getMilliTime());
+                nextAlarm.add(appDate.get(i).getMilliTime() - (Long.parseLong(appDate.get(i).getEndTime())));
+            }
+        }
+        ArrayList<Long> setAlarm = new ArrayList<>();
+        setAlarm.addAll(nextAlarm);
+        Collections.sort(setAlarm);
+        for (int i = 0; i < setAlarm.size(); i++) {
+            if (setAlarm.get(i)>currentMilli)
+            {
+                return setAlarm.get(i);
+            }
+        }
+        return new Date(2020-1900, 8, 23).getTime();
+    }
+
 
 
 }//End FileIO Class

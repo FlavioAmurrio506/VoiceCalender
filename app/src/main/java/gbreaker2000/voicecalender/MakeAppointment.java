@@ -233,9 +233,10 @@ public class MakeAppointment extends AppCompatActivity {
             tempsave.setTittle(tittle.getText().toString());
             tempsave.setStartDate(appointment_start.getText().toString());
             tempsave.setStartTime(appointment_end.getText().toString());
-            //tempsave.setEndDate(appointment_end.getText().toString());
+            long remin = (long) reminder_int.getSelectedItem();
+//            tempsave.setEndDate();
             //tempsave.setEndDate(null);
-            //tempsave.setEndTime(null);
+            tempsave.setEndTime(String.valueOf(remin*60*1000));
             //tempsave.setEndTime(appointment_end.getText().toString());
             tempsave.setAllDay(all_day.isChecked());
             tempsave.setFileName(PATH_NAME);
@@ -263,10 +264,7 @@ public class MakeAppointment extends AppCompatActivity {
 //        }
 
 
-            setAlarm(tempsave.getMilliTime());
-            if (Integer.parseInt(reminder_int.getSelectedItem().toString()) != 0) {
-                setAlarm(tempsave.getMilliTime() - (Integer.parseInt(reminder_int.getSelectedItem().toString()) * 60 * 1000));
-            }
+
             aptdata.add(tempsave);
 
             fileio.FileOutput(aptdata);
@@ -303,30 +301,30 @@ public class MakeAppointment extends AppCompatActivity {
 
     }
 
-    public void setAlarm(long targetCal) {
-//        long currentTime = System.currentTimeMillis();
-//        if (targetCal < currentTime && targetCal > 0) {
-//            //do Nothing
-//            return;
-//        } else {
-            List<Long> alarms = new ArrayList<Long>();
-            alarms.clear();
-            alarms.addAll(FileIO.AlarmSaveIn());
-            alarms.add(targetCal);
-            FileIO.AlarmSaveOut(alarms);
-        alarms.clear();
-        alarms.addAll(FileIO.AlarmSaveIn());
-
-
-
-//            info.setText("\n\n***\n"
-//                    + "Alarm is set@ " + targetCal.getTime() + "\n"
-//                    + "***\n");  getBaseContext()
-            Intent intent = new Intent(this, AlarmReceiver.class);
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(getBaseContext(), RQS_1, intent, 0);
-            alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-            alarmManager.set(AlarmManager.RTC_WAKEUP, alarms.get(0), pendingIntent);
-        }
+//    public void setAlarm(long targetCal) {
+////        long currentTime = System.currentTimeMillis();
+////        if (targetCal < currentTime && targetCal > 0) {
+////            //do Nothing
+////            return;
+////        } else {
+//            List<Long> alarms = new ArrayList<Long>();
+//            alarms.clear();
+//            alarms.addAll(FileIO.AlarmSaveIn());
+//            alarms.add(targetCal);
+//            FileIO.AlarmSaveOut(alarms);
+//        alarms.clear();
+//        alarms.addAll(FileIO.AlarmSaveIn());
+//
+//
+//
+////            info.setText("\n\n***\n"
+////                    + "Alarm is set@ " + targetCal.getTime() + "\n"
+////                    + "***\n");  getBaseContext()
+//            Intent intent = new Intent(this, AlarmReceiver.class);
+//            PendingIntent pendingIntent = PendingIntent.getBroadcast(getBaseContext(), RQS_1, intent, 0);
+//            alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+//            alarmManager.set(AlarmManager.RTC_WAKEUP, alarms.get(0), pendingIntent);
+//        }
 
 
     public void startRecording(View view) {
