@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
         rec_float_button = (FloatingActionButton)findViewById(R.id.rec_float_button);
         today_button = (FloatingActionButton)findViewById(R.id.today_button);
         add_float_Button = (FloatingActionButton)findViewById(R.id.add_float_button);
-        rec_float_button.setBackgroundTintList(ColorStateList.valueOf(0xff0000ff));
+         rec_float_button.setBackgroundTintList(ColorStateList.valueOf(0xff0000ff));
         today_button.setBackgroundTintList(ColorStateList.valueOf(0xff0000ff));
         add_float_Button.setBackgroundTintList(ColorStateList.valueOf(0xff0000ff));
         listViewTittle = (TextView)findViewById(R.id.listViewTittle);
@@ -579,14 +579,14 @@ public class MainActivity extends AppCompatActivity {
 //            //do Nothing
 //            return;
 //        } else {
-//        long targetCal = 6;
-//        List<Long> alarms = new ArrayList<Long>();
-//        alarms.clear();
-//        alarms.addAll(FileIO.AlarmSaveIn());
-//        alarms.add(targetCal);
-//        FileIO.AlarmSaveOut(alarms);
-//        alarms.clear();
-//        alarms.addAll(FileIO.AlarmSaveIn());
+        long targetCal = 6;
+        List<Long> alarms = new ArrayList<Long>();
+        alarms.clear();
+        alarms.addAll(FileIO.AlarmSaveIn());
+        alarms.add(targetCal);
+        FileIO.AlarmSaveOut(alarms);
+        alarms.clear();
+        alarms.addAll(FileIO.AlarmSaveIn());
 
 
 //            info.setText("\n\n***\n"
@@ -595,11 +595,7 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, AlarmReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(getBaseContext(), RQS_1, intent, 0);
         alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        try {
-            alarmManager.set(AlarmManager.RTC_WAKEUP, FileIO.nextAlarm(), pendingIntent);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        alarmManager.set(AlarmManager.RTC_WAKEUP, alarms.get(0), pendingIntent);
     }
 
 

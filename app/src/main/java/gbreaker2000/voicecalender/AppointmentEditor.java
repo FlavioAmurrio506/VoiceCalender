@@ -1,6 +1,5 @@
 package gbreaker2000.voicecalender;
 
-import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.FragmentTransaction;
 import android.app.PendingIntent;
@@ -10,17 +9,14 @@ import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
-import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.Toast;
@@ -29,11 +25,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 
-public class MakeAppointment extends AppCompatActivity {
+public class AppointmentEditor extends AppCompatActivity {
 
     public String PATH_NAME = "";
 
@@ -67,6 +61,7 @@ public class MakeAppointment extends AppCompatActivity {
     //private int curFormat = 0;
     //private String fileExt[] = {".mp4", ".3gpp"};
     //private int opFormats[] = {MediaRecorder.OutputFormat.MPEG_4, MediaRecorder.OutputFormat.THREE_GPP};
+    int aptIndex = 0;
 
 
     @Override
@@ -91,29 +86,17 @@ public class MakeAppointment extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_make_appointment);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        setContentView(R.layout.activity_appointment_editor);
+//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+//        setSupportActionBar(toolbar);
 
         aptdata = new ArrayList<>();
         aptdata.clear();
         aptdata.addAll(fileio.FileInput());
 
         Intent activityThatCalled = getIntent();
-        String previousActivity = activityThatCalled.getExtras().getString("PATH_NAME_MAIN");
-        prevDate = activityThatCalled.getExtras().getString("MAYBE_MAIN");
-        if (prevDate.equals(null))
-        {
-            prevDate = "";
-        }
-        if (prevDate.equals(""))
-        {
-            final Calendar c = Calendar.getInstance();
-            int year = c.get(Calendar.YEAR);
-            int month = c.get(Calendar.MONTH);
-            int day = c.get(Calendar.DAY_OF_MONTH);
-            prevDate = (month+1) + "/" + day + "/" + year;
-        }
+        String previousActivity = activityThatCalled.getExtras().getString("foundIndexText");
+        aptIndex = Integer.parseInt(previousActivity);
 
         file_location = (EditText)findViewById(R.id.file_location);
         file_location.setText(previousActivity);
@@ -144,15 +127,24 @@ public class MakeAppointment extends AppCompatActivity {
         rec_float_button_make = (FloatingActionButton)findViewById(R.id.rec_float_button_make);
         play_float_button_make = (FloatingActionButton)findViewById(R.id.play_float_button_make);
         stop_image = (FloatingActionButton)findViewById(R.id.stop_image);
-        stopDrawable = stop_image.getDrawable();
-        playDrawable = play_float_button_make.getDrawable();
-        recDrawable = rec_float_button_make.getDrawable();
+        stopDrawable = getResources().getDrawable(R.drawable.alpha_stop);
+        playDrawable = getResources().getDrawable(R.drawable.alpha_play);
+        recDrawable = getResources().getDrawable(R.drawable.alpha_mic);
         stop_rec_image = (FloatingActionButton)findViewById(R.id.stop_rec_image);
-        stopRecDrawable = stop_rec_image.getDrawable();
-        rec_float_button_make.setBackgroundTintList(ColorStateList.valueOf(0xff0000ff));
-        play_float_button_make.setBackgroundTintList(ColorStateList.valueOf(0xff0000ff));
+        stopRecDrawable = getResources().getDrawable(R.drawable.alpha_stop_mic);
+//        rec_float_button_make.setBackgroundTintList(ColorStateList.valueOf(0xff0000ff));
+//        play_float_button_make.setBackgroundTintList(ColorStateList.valueOf(0xff0000ff));
         appointment_start.setText(prevDate);
         reminder_int = (Spinner)findViewById(R.id.reminder_int);
+
+        tittle.setText(aptdata.get(aptIndex).getTittle());
+        appointment_start.setText(aptdata.get(aptIndex).getStartDate());
+        appointment_end.setText(aptdata.get(aptIndex).getStartTime());
+        reminder.setText(aptdata.get(aptIndex).getNotes());
+        location.setText(aptdata.get(aptIndex).getLocation());
+        PATH_NAME = aptdata.get(aptIndex).getFileName();
+
+
 
 //        appointment_start.setTag(appointment_start.getKeyListener());
 //        appointment_end.setTag(appointment_end.getKeyListener());
@@ -229,6 +221,7 @@ public class MakeAppointment extends AppCompatActivity {
     public void saveAppoint(View view) {
 
         try {
+            aptdata.remove(aptIndex);
             Appointment tempsave = new Appointment();
             tempsave.setTittle(tittle.getText().toString());
             tempsave.setStartDate(appointment_start.getText().toString());
@@ -309,11 +302,11 @@ public class MakeAppointment extends AppCompatActivity {
 //            //do Nothing
 //            return;
 //        } else {
-            List<Long> alarms = new ArrayList<Long>();
-            alarms.clear();
-            alarms.addAll(FileIO.AlarmSaveIn());
-            alarms.add(targetCal);
-            FileIO.AlarmSaveOut(alarms);
+        List<Long> alarms = new ArrayList<Long>();
+        alarms.clear();
+        alarms.addAll(FileIO.AlarmSaveIn());
+        alarms.add(targetCal);
+        FileIO.AlarmSaveOut(alarms);
         alarms.clear();
         alarms.addAll(FileIO.AlarmSaveIn());
 
@@ -322,11 +315,11 @@ public class MakeAppointment extends AppCompatActivity {
 //            info.setText("\n\n***\n"
 //                    + "Alarm is set@ " + targetCal.getTime() + "\n"
 //                    + "***\n");  getBaseContext()
-            Intent intent = new Intent(this, AlarmReceiver.class);
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(getBaseContext(), RQS_1, intent, 0);
-            alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-            alarmManager.set(AlarmManager.RTC_WAKEUP, alarms.get(0), pendingIntent);
-        }
+        Intent intent = new Intent(this, AlarmReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getBaseContext(), RQS_1, intent, 0);
+        alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, alarms.get(0), pendingIntent);
+    }
 
 
     public void startRecording(View view) {
@@ -362,7 +355,7 @@ public class MakeAppointment extends AppCompatActivity {
             recStatus = false;
             rec_float_button_make.setBackgroundTintList(ColorStateList.valueOf(0xff0000ff));
 //            rec_float_button_make.setImageDrawable(recDrawable);
-                    file_location.setText(PATH_NAME);
+            file_location.setText(PATH_NAME);
 //            Toast.makeText(this,"Recording Stopped",Toast.LENGTH_SHORT).show();
 //            Toast.makeText(this,PATH_NAME,Toast.LENGTH_SHORT).show();
         }
@@ -471,3 +464,8 @@ public class MakeAppointment extends AppCompatActivity {
 
 
 }
+
+
+
+
+

@@ -19,6 +19,7 @@ public class MyDialogFragment extends DialogFragment {
 
     long time;
     File file;
+    String foundIndexText = "0";
 
     /**
      * Create a new instance of MyDialogFragment, providing "num"
@@ -41,6 +42,7 @@ public class MyDialogFragment extends DialogFragment {
         super.onCreate(savedInstanceState);
         time = getArguments().getLong("num");
         final int foundIndex = Appointment.AptDisSearch(time);
+        foundIndexText = "" + foundIndex;
 
 
         FileIO fileIO = new FileIO();
@@ -94,10 +96,13 @@ public class MyDialogFragment extends DialogFragment {
         });
 
         // Add text for a negative button
-        theDialog.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+        theDialog.setNegativeButton("Edit", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
 
+                Intent editApp = new Intent(getContext(), AppointmentEditor.class);
+                editApp.putExtra("foundIndexText", foundIndexText);
+                startActivity(editApp);
                 Toast.makeText(getActivity(), "Clicked Cancel", Toast.LENGTH_SHORT).show();
 
             }
