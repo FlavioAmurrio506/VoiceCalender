@@ -18,6 +18,9 @@ import java.util.List;
 /**
  * Created by Flavi on 4/17/2016.
  */
+
+// File input/output class.
+
 public class FileIO {
     public static List<Appointment> FileInput()
     {

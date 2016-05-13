@@ -15,6 +15,8 @@ import java.util.List;
 /**
  * Created by Flavi on 5/13/2016.
  */
+
+// This class handles the notifications
 public class AlertReceiverNotification extends BroadcastReceiver {
 
     // Called when a broadcast is made targeting this class

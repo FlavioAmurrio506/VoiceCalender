@@ -42,6 +42,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 
+// Main Activity View. Welcoming Screen
 public class MainActivity extends AppCompatActivity {
 
     //CalendarView calendar;

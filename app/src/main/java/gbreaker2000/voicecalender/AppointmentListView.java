@@ -20,6 +20,7 @@ import android.widget.Toast;
 import java.io.IOException;
 import java.util.ArrayList;
 
+// This will display all the appointments in a ListView
 public class AppointmentListView extends AppCompatActivity {
 
     MediaPlayer mPlayer = new MediaPlayer();

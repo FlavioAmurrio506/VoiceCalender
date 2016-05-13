@@ -25,6 +25,8 @@ import java.util.HashSet;
 /**
  * Created by Flavi on 4/22/2016.
  */
+
+// This handles the Calandar generator. IMPORTANT FILE, DONT MODIFIY
 public class CalendarView extends LinearLayout
 {
     public Date today = new Date();

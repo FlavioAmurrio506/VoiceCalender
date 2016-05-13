@@ -15,6 +15,8 @@ import java.util.List;
 /**
  * Created by Flavi on 4/25/2016.
  */
+
+// Display Appointment information in a Fragment
 public class MyDialogFragment extends DialogFragment {
 
     long time;

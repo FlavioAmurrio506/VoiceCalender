@@ -11,6 +11,8 @@ import android.view.View;
 
 import java.io.IOException;
 
+// This is dummy class that was suppose to catch the notification alarm
+
 public class AlertReceiver extends AppCompatActivity {
 
     MediaPlayer mPlayer = MediaPlayer.create(this,R.raw.morning);

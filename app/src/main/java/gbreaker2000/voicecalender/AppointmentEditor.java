@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+// This class will allow the user to modified appointments
 public class AppointmentEditor extends AppCompatActivity {
 
     public String PATH_NAME = "";

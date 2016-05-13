@@ -25,6 +25,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+// This is the screen that displays the alarm information
+
 public class AlarmReminderScreen extends AppCompatActivity {
 
     public static MediaPlayer alarmSound = new MediaPlayer();
@@ -61,51 +63,6 @@ public class AlarmReminderScreen extends AppCompatActivity {
         stopDrawable = getResources().getDrawable(R.drawable.alpha_stop);
         alarmSound = MediaPlayer.create(this, R.raw.morning);
 
-//        FileIO read = new FileIO();
-//
-//      looker= new ArrayList<>();
-//        looker.clear();
-        //       looker.addAll(read.FileInput());
-
-
-
-
- /*       for (int i = 0; i<looker.size(); i++)
-        {
-            looker.get(i).setMilliSec();
-            if(looker.get(i).getMilliTime()>System.currentTimeMillis())
-            {
-                indexOfItem = i;
-                break;
-            }
-        }
-        indexOfItem--;
-        if(indexOfItem<0)
-        {
-            indexOfItem = 0;
-        }
-*/
-//        if(found.equals(looker.get(indexOfItem)))
-//        {
-//            looker.set(indexOfItem, found);
-//        }
-
-        /*try {
-
-            sb.append("Tittle: " + looker.get(indexOfItem).getTittle() + "\n");
-            sb.append("Date: " + looker.get(indexOfItem).getStartDate() + "\n");
-            sb.append("Time: " + looker.get(indexOfItem).getStartTime() + "\n");
-            sb.append("Location: " + looker.get(indexOfItem).getLocation() + "\n");
-            sb.append("Notes: " + looker.get(indexOfItem).getNotes() + "\n");
-            alarm_info.setText(sb.toString());
-//            Toast.makeText(this, "" + looker.get(indexOfItem - 1).getTittle() + "", Toast.LENGTH_LONG).show();
-        }
-
-
-        catch (Exception e)
-        {
-
-        }*/
         try {
 
             sb.append("Tittle: " + found.getTittle() + "\n");
@@ -124,47 +81,6 @@ public class AlarmReminderScreen extends AppCompatActivity {
         }
 
         alarmSound.start();
-        //alarmSound = MediaPlayer.create(arg0,R.raw.morning);
-
-//        if(!looker.get(indexOfItem).isAllDay()) {
-//
-//            try {
-//                alarmSound.setDataSource(getAlarmPath());
-//                alarmSound.prepare();
-//                alarmSound.start();
-//
-//
-//            } catch (IOException e) {
-//                //Log.e(LOG_TAG, "prepare() failed");
-//            }
-          /*  looker.get(indexOfItem).setAllDay(true);
-            read.FileOutput(looker);*/
-
-//        }
-//        while(1==1)
-//        {
-//            if (!alarmSound.isPlaying())
-//            {
-//                alarmSound.release();
-//                break;
-//            }
-//        }
-
-
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
-//
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-
 
         Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         // Vibrate for 500 milliseconds
@@ -174,19 +90,6 @@ public class AlarmReminderScreen extends AppCompatActivity {
 
 // The '-1' here means to vibrate once, as '-1' is out of bounds in the pattern array
         vibrator.vibrate(1000);
-//        long startAlarmTime = System.currentTimeMillis();
-//        long endAlarmTime = startAlarmTime + (30 * 1000);
-//
-//        while(System.currentTimeMillis()<endAlarmTime)
-//        {
-//            if(alarmSound.isPlaying())
-//            {
-//
-//            }
-//            else {
-//                vibrator.cancel();
-//            }
-//        }
 
         if(found.getFileName().equals(""))
         {
@@ -209,15 +112,11 @@ public class AlarmReminderScreen extends AppCompatActivity {
         {
 
         }
-//        alarmSound.release();
-//        alarmSound = new MediaPlayer();
     }
 
     public void stopReceiver(View view) {
         stopReceiver();
         setNextAlarm();
-//        Intent intent = new Intent(AlarmReminderScreen.this,MainActivity.class);
-//        startActivity(intent);
     }
 
     public static String getAlarmPath()
