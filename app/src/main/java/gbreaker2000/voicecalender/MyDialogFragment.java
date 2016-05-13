@@ -103,7 +103,7 @@ public class MyDialogFragment extends DialogFragment {
                 Intent editApp = new Intent(getContext(), AppointmentEditor.class);
                 editApp.putExtra("foundIndexText", foundIndexText);
                 startActivity(editApp);
-                Toast.makeText(getActivity(), "Clicked Cancel", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getActivity(), "Clicked Cancel", Toast.LENGTH_SHORT).show();
 
             }
         });

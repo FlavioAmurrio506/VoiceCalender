@@ -584,6 +584,16 @@ public class MainActivity extends AppCompatActivity {
         alarms.clear();
         alarms.addAll(FileIO.AlarmSaveIn());
         alarms.add(targetCal);
+        Date tempdate = new Date();
+
+        tempdate.setHours(9);
+        tempdate.setMinutes(03);
+        tempdate.setSeconds(34);
+        for(int i = 0; i<7; i++)
+        {
+            tempdate.setDate(tempdate.getDay()+i);
+            alarms.add(tempdate.getTime());
+        }
         FileIO.AlarmSaveOut(alarms);
         alarms.clear();
         alarms.addAll(FileIO.AlarmSaveIn());
@@ -592,10 +602,20 @@ public class MainActivity extends AppCompatActivity {
 //            info.setText("\n\n***\n"
 //                    + "Alarm is set@ " + targetCal.getTime() + "\n"
 //                    + "***\n");  getBaseContext()
-        Intent intent = new Intent(this, AlarmReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(getBaseContext(), RQS_1, intent, 0);
-        alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, alarms.get(0), pendingIntent);
+
+        if(alarms.get(0) != tempdate.getTime()) {
+            Intent intent = new Intent(this, AlarmReceiver.class);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(getBaseContext(), RQS_1, intent, 0);
+            alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+            alarmManager.set(AlarmManager.RTC_WAKEUP, alarms.get(0), pendingIntent);
+        }
+        else
+        {
+            Intent intent = new Intent(this, AlertReceiverNotification.class);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(getBaseContext(), RQS_1, intent, 0);
+            alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+            alarmManager.set(AlarmManager.RTC_WAKEUP, alarms.get(0), pendingIntent);
+        }
     }
 
 
