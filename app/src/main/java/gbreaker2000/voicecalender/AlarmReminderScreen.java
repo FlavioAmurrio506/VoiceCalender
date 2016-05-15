@@ -55,7 +55,7 @@ public class AlarmReminderScreen extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_alarm_reminder_screen);
+//        setContentView(R.layout.activity_alarm_reminder_screen);
 
         Appointment found = alarmRinger();
         Date today = new Date(System.currentTimeMillis());
@@ -93,7 +93,7 @@ public class AlarmReminderScreen extends AppCompatActivity {
             }
 
             NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
-            builder.setSmallIcon(R.drawable.alpha_mic);
+            builder.setSmallIcon(R.drawable.icon);
             builder.setContentTitle("Voice Calendar");
             builder.setContentText(msg);
             Intent intent = new Intent(this, MainActivity.class);
@@ -123,6 +123,10 @@ public class AlarmReminderScreen extends AppCompatActivity {
 //            Intent gotoMainPro = new Intent(this,MainActivity.class);
 //            startActivity(gotoMainPro);
         } else {
+//            super.onCreate(savedInstanceState);
+
+            setContentView(R.layout.activity_alarm_reminder_screen);
+
 
             alarm_info = (TextView) findViewById(R.id.alarm_info);
             ars_play_buttton = (FloatingActionButton) findViewById(R.id.ars_play_buttton);
