@@ -2,6 +2,7 @@ package gbreaker2000.voicecalender;
 
 import android.app.AlarmManager;
 import android.app.AppOpsManager;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -12,6 +13,8 @@ import android.os.Environment;
 import android.os.Vibrator;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -55,48 +58,109 @@ public class AlarmReminderScreen extends AppCompatActivity {
         setContentView(R.layout.activity_alarm_reminder_screen);
 
         Appointment found = alarmRinger();
-
-        alarm_info = (TextView)findViewById(R.id.alarm_info);
-        ars_play_buttton = (FloatingActionButton)findViewById(R.id.ars_play_buttton);
-        StringBuilder sb = new StringBuilder();
-        playDrawable = getResources().getDrawable(R.drawable.alpha_play);
-        stopDrawable = getResources().getDrawable(R.drawable.alpha_stop);
-        alarmSound = MediaPlayer.create(this, R.raw.morning);
-
-        try {
-
-            sb.append("Tittle: " + found.getTittle() + "\n");
-            sb.append("Date: " + found.getStartDate() + "\n");
-            sb.append("Time: " + found.getStartTime() + "\n");
-            sb.append("Location: " + found.getLocation() + "\n");
-            sb.append("Notes: " + found.getNotes() + "\n");
-            alarm_info.setText(sb.toString());
-//            Toast.makeText(this, "" + looker.get(indexOfItem - 1).getTittle() + "", Toast.LENGTH_LONG).show();
-        }
+        Date today = new Date(System.currentTimeMillis());
+        long t = (today.getMinutes() * 60 * 1000) + (today.getHours() * 60 * 60 * 1000);
 
 
-        catch (Exception e)
+        if (FileIO.notificationTime() == t)
         {
+            alarmSound = MediaPlayer.create(this, R.raw.noti);
+            alarmSound.start();
+            String[] events = {"No Events"};
 
-        }
+            int month = today.getMonth() + 1;
+            int day = today.getDate();
+            int year = today.getYear() + 1900;
+            List<Appointment> dayApt = Appointment.DayAppointments(month + "/" + day + "/" + year);
 
-        alarmSound.start();
+            String msg = "No Appointment";
 
-        Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-        // Vibrate for 500 milliseconds
+            StringBuilder sb = new StringBuilder();
+            if (dayApt.size() == 0)
+            {
+                sb.append("No Data");
+
+            }
+            else
+            {
+                events = new String[dayApt.size()];
+                for(int i = 0; i<dayApt.size(); i++)
+                {
+//                    sb.append(dayApt.get(i).getTittle() + " " + dayApt.get(i).getStartTime() + "\n");
+                    events[i] = dayApt.get(i).getTittle() + " " + dayApt.get(i).getStartTime();
+                }
+                msg = "Today's Appointments";
+            }
+
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+            builder.setSmallIcon(R.drawable.alpha_mic);
+            builder.setContentTitle("Voice Calendar");
+            builder.setContentText(msg);
+            Intent intent = new Intent(this, MainActivity.class);
+            // New Content
+
+            NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
+            inboxStyle.setBigContentTitle("Today Appoitments");
+
+            for (int i=0; i < events.length; i++) {
+
+                inboxStyle.addLine(events[i]);
+            }
+            builder.setStyle(inboxStyle);
+
+
+
+
+            TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+            stackBuilder.addParentStack(MainActivity.class);
+            stackBuilder.addNextIntent(intent);
+            PendingIntent pendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+            builder.setContentIntent(pendingIntent);
+            NotificationManager NM = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            NM.notify(0, builder.build());
+            setNextAlarm();
+            finish();
+//            Intent gotoMainPro = new Intent(this,MainActivity.class);
+//            startActivity(gotoMainPro);
+        } else {
+
+            alarm_info = (TextView) findViewById(R.id.alarm_info);
+            ars_play_buttton = (FloatingActionButton) findViewById(R.id.ars_play_buttton);
+            StringBuilder sb = new StringBuilder();
+            playDrawable = getResources().getDrawable(R.drawable.alpha_play);
+            stopDrawable = getResources().getDrawable(R.drawable.alpha_stop);
+            alarmSound = MediaPlayer.create(this, R.raw.morning);
+
+            try {
+
+                sb.append("Tittle: " + found.getTittle() + "\n");
+                sb.append("Date: " + found.getStartDate() + "\n");
+                sb.append("Time: " + found.getStartTime() + "\n");
+                sb.append("Location: " + found.getLocation() + "\n");
+                sb.append("Notes: " + found.getNotes() + "\n");
+                alarm_info.setText(sb.toString());
+//            Toast.makeText(this, "" + looker.get(indexOfItem - 1).getTittle() + "", Toast.LENGTH_LONG).show();
+            } catch (Exception e) {
+
+            }
+
+            alarmSound.start();
+
+            Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+            // Vibrate for 500 milliseconds
 //        v.vibrate(500);
 
 //        long[] pattern = {0, 100, 1000, 300, 200, 100, 500, 200, 100};
 
 // The '-1' here means to vibrate once, as '-1' is out of bounds in the pattern array
-        vibrator.vibrate(1000);
+            vibrator.vibrate(1000);
 
-        if(found.getFileName().equals(""))
-        {
-            ars_play_buttton.setVisibility(View.GONE);
+            if (found.getFileName().equals("")) {
+                ars_play_buttton.setVisibility(View.GONE);
+            }
+            setNextAlarm();
+
         }
-        setNextAlarm();
-
     }
     public static void stopReceiver()
     {

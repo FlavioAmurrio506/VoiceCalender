@@ -43,7 +43,27 @@ public class FileIO {
             //Catch exception if any
             System.err.println("Error: " + e.getMessage());
         }
+        int counter = 0;
+        for (int i = 0; i<inputData.size(); i++) {
+            if (inputData.get(i).getTittle().equals("NOTIFICATION ALERT")) {
+                try {
+                    inputData.get(i).setStartDate("01/01/2049");
+                }
+                catch (Exception e )
+                {
+
+                }
+                counter++;
+            }
+                if (counter==2)
+                {
+                    inputData.remove(i);
+                }
+
+            }
+
         Collections.sort(inputData);
+        FileOutput(inputData);
         return inputData;
     }//End FileInput Method
 
@@ -137,14 +157,11 @@ public class FileIO {
         long curTime = System.currentTimeMillis();
         for(int i = 0; i<inputData.size(); i++)
         {
-            if(inputData.get(i)<curTime)
+            if(inputData.get(i) < curTime)
             {
                 inputData.remove(i);
             }
-            else if (inputData.get(i)>curTime)
-            {
-//                break;
-            }
+
         }
 
         if (inputData.size()<1)
@@ -219,6 +236,22 @@ public class FileIO {
         }
         return hashOut;
     }//End FileInput Method
+
+    public static long notificationTime()
+    {
+        List<Appointment> search = FileInput();
+        for (int i = 0; i<search.size(); i++)
+        {
+            if (search.get(i).getTittle().equals("NOTIFICATION ALERT"))
+            {
+                String[] time = search.get(i).getStartTime().split(":");
+                int hour = Integer.parseInt(time[0]);
+                int min = Integer.parseInt(time[1]);
+                return( (hour*60*60*1000) + (min*60*1000));
+            }
+        }
+        return -1;
+    }
 
 
 

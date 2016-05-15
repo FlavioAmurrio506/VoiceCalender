@@ -230,6 +230,7 @@ public class MakeAppointment extends AppCompatActivity {
 
     public void saveAppoint(View view) {
 
+
         try {
             Appointment tempsave = new Appointment();
             tempsave.setTittle(tittle.getText().toString());
@@ -265,9 +266,11 @@ public class MakeAppointment extends AppCompatActivity {
 //        }
 
 
-            setAlarm(tempsave.getMilliTime());
-            if (Integer.parseInt(reminder_int.getSelectedItem().toString()) != 0) {
-                setAlarm(tempsave.getMilliTime() - (Integer.parseInt(reminder_int.getSelectedItem().toString()) * 60 * 1000));
+            if(!tempsave.getTittle().equals("NOTIFICATION ALERT")) {
+                setAlarm(tempsave.getMilliTime());
+                if (Integer.parseInt(reminder_int.getSelectedItem().toString()) != 0) {
+                    setAlarm(tempsave.getMilliTime() - (Integer.parseInt(reminder_int.getSelectedItem().toString()) * 60 * 1000));
+                }
             }
             aptdata.add(tempsave);
 

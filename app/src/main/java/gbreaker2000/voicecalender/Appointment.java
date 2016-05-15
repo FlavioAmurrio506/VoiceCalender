@@ -213,6 +213,11 @@ public class Appointment implements Comparable<Appointment>{
             throw new Exception();
         }
 
+        if(month<1 || month >31 || month<1 || month>12 || year<1900 || year>2050)
+        {
+            throw new Exception();
+        }
+
         Date cal = new Date(year-1900, month-1, day);
         cal.setHours(hour);
         cal.setMinutes(minute);

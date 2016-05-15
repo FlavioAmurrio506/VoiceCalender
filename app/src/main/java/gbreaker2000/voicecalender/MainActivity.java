@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
         }
         catch (Exception e)
         {
-
+            Toast.makeText(this,"Notifailed",Toast.LENGTH_LONG).show();
         }
 
         StringBuilder sb = new StringBuilder();
@@ -214,7 +214,24 @@ public class MainActivity extends AppCompatActivity {
 
         //--------New Stuff----
         try {
-            ListViewModifier((ArrayList<Appointment>) Appointment.UpComingAppointments());
+//            ListViewModifier((ArrayList<Appointment>) Appointment.UpComingAppointments());
+
+            Date today = new Date(System.currentTimeMillis());
+            int month = today.getMonth() + 1;
+            int day = today.getDate();
+            int year = today.getYear() + 1900;
+            List<Appointment> dayApt = Appointment.DayAppointments(month + "/" + day + "/" + year);
+            if (dayApt.size()<1)
+            {
+                ListViewModifier((ArrayList<Appointment>) Appointment.UpComingAppointments());
+                listViewTittle.setText("Future Events");
+            }
+            else
+            {
+
+            ListViewModifier((ArrayList<Appointment>) dayApt);
+                listViewTittle.setText("Today's Appointments");
+            }
         }
         catch (Exception e)
         {
@@ -585,15 +602,30 @@ public class MainActivity extends AppCompatActivity {
         alarms.clear();
         alarms.addAll(FileIO.AlarmSaveIn());
         alarms.add(targetCal);
-        Date tempdate = new Date();
 
-        tempdate.setHours(9);
-        tempdate.setMinutes(03);
-        tempdate.setSeconds(34);
-        for(int i = 0; i<7; i++)
+        List<Appointment> search = FileIO.FileInput();
+        int hour = 7;
+        int minute = 03;
+        for (int i = 0; i<search.size(); i++) {
+            if (search.get(i).getTittle().equals("NOTIFICATION ALERT")) {
+                String[] time = search.get(i).getStartTime().split(":");
+                hour = Integer.parseInt(time[0]);
+                minute = Integer.parseInt(time[1]);
+            }
+        }
+        Date tempdate = new Date(System.currentTimeMillis());
+
+        tempdate.setHours(hour);
+        tempdate.setMinutes(minute);
+        long noti = tempdate.getTime();
+        long notimod = noti;
+        alarms.add(noti);
+        for(int i = 0; i<1; i++)
         {
-            tempdate.setDate(tempdate.getDay()+i);
-            alarms.add(tempdate.getTime());
+            notimod = notimod + (24*60*60*1000);
+//            tempdate.setDate(tempdate.getDay()+i);
+//            Toast.makeText(this,tempdate.toString(),Toast.LENGTH_SHORT).show();
+            alarms.add(notimod);
         }
         FileIO.AlarmSaveOut(alarms);
         alarms.clear();
@@ -604,19 +636,36 @@ public class MainActivity extends AppCompatActivity {
 //                    + "Alarm is set@ " + targetCal.getTime() + "\n"
 //                    + "***\n");  getBaseContext()
 
-        if(alarms.get(0) != tempdate.getTime()) {
+//        Toast.makeText(this,new Date(noti).toString(),Toast.LENGTH_LONG).show();
+//        Toast.makeText(this,new Date(alarms.get(0)).toString(),Toast.LENGTH_LONG).show();
+
+
+//        if(alarms.get(0) != noti) {
+//            Toast.makeText(this,"Alarm Set",Toast.LENGTH_SHORT).show();
+
             Intent intent = new Intent(this, AlarmReceiver.class);
             PendingIntent pendingIntent = PendingIntent.getBroadcast(getBaseContext(), RQS_1, intent, 0);
             alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
             alarmManager.set(AlarmManager.RTC_WAKEUP, alarms.get(0), pendingIntent);
-        }
-        else
-        {
-            Intent intent = new Intent(this, AlertReceiverNotification.class);
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(getBaseContext(), RQS_1, intent, 0);
-            alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-            alarmManager.set(AlarmManager.RTC_WAKEUP, alarms.get(0), pendingIntent);
-        }
+//        }
+//        else
+//        {
+//
+//            Intent intent = new Intent(this, AlertReceiverNotification.class);
+//            PendingIntent pendingIntent = PendingIntent.getBroadcast(getBaseContext(), RQS_1, intent, 0);
+//            alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+//            alarmManager.set(AlarmManager.RTC_WAKEUP, alarms.get(0), pendingIntent);
+////            Toast.makeText(this,"Notification Set",Toast.LENGTH_SHORT).show();
+////            Intent alertIntent = new Intent(this, AlertReceiverNotification.class);
+////            AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+////            alarmManager.set(AlarmManager.RTC_WAKEUP, alarms.get(0),
+////                    PendingIntent.getBroadcast(this, 33, alertIntent,
+////                            PendingIntent.FLAG_UPDATE_CURRENT));
+//
+////            PendingIntent pendingIntent = PendingIntent.getBroadcast(getBaseContext(), RQS_1, alertIntent, 0);
+////            alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+////            alarmManager.set(AlarmManager.RTC_WAKEUP, alarms.get(0), pendingIntent);
+//        }
     }
 
 
