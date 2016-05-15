@@ -123,6 +123,11 @@ public class AlarmReminderScreen extends AppCompatActivity {
 //            Intent gotoMainPro = new Intent(this,MainActivity.class);
 //            startActivity(gotoMainPro);
         } else {
+
+            if(found.getTittle().contains("Martin") || found.getTittle().contains("New Years"))
+            {
+                finish();
+            }
 //            super.onCreate(savedInstanceState);
 
             setContentView(R.layout.activity_alarm_reminder_screen);
