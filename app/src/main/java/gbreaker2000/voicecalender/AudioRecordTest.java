@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 
 import java.io.IOException;
 
+// This is a record audio test file, no longer neccesary
 public class AudioRecordTest extends AppCompatActivity {
 
     private static final String LOG_TAG = "AudioRecordTest";

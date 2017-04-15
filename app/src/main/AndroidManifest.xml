@@ -9,7 +9,10 @@
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
-    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
+    <!-- Permission to Send SMS -->
+    <uses-permission android:name="android.permission.SEND_SMS" />
 
     <android:uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <android:uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -98,6 +101,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="gbreaker2000.voicecalender.MainActivity" />
         </activity>
+        <activity android:name=".AppointmentEditor" />
+        <activity android:name=".NotiActivator"></activity>
     </application>
 
 </manifest>

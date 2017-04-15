@@ -10,6 +10,8 @@ import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
 
+// Date Picker Dialog
+
 @SuppressLint("ValidFragment")
 public class DateDialog extends DialogFragment implements DatePickerDialog.OnDateSetListener {
     EditText txtdate;

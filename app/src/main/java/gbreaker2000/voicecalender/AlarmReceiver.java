@@ -16,7 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-
+// Will send you to the AlarmReminder Screen
+// Only method that function is the onCreate
 public class AlarmReceiver extends BroadcastReceiver {
 
 

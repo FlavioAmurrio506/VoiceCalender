@@ -20,6 +20,8 @@ import java.util.Calendar;
 /**
  * A placeholder fragment containing a simple view.
  */
+
+// This is a dummy as well
 public class AppointmentInfoDisplayFragment extends DialogFragment{
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {

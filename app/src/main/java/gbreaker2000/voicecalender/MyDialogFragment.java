@@ -8,15 +8,20 @@ import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.widget.Toast;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Flavi on 4/25/2016.
  */
+
+// Display Appointment information in a Fragment
 public class MyDialogFragment extends DialogFragment {
 
     long time;
+    File file;
+    String foundIndexText = "0";
 
     /**
      * Create a new instance of MyDialogFragment, providing "num"
@@ -39,6 +44,7 @@ public class MyDialogFragment extends DialogFragment {
         super.onCreate(savedInstanceState);
         time = getArguments().getLong("num");
         final int foundIndex = Appointment.AptDisSearch(time);
+        foundIndexText = "" + foundIndex;
 
 
         FileIO fileIO = new FileIO();
@@ -65,22 +71,41 @@ public class MyDialogFragment extends DialogFragment {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
 
+                boolean deleted = false;
+
+                if (aptFile.get(foundIndex).hasRecording())
+                {
+                    file = new File(aptFile.get(foundIndex).getFileName());
+                    deleted = file.delete();
+                }
                 aptFile.remove(foundIndex);
                 FileIO.FileOutput(aptFile);
                 Intent intent = new Intent(getContext(), MainActivity.class);
                 startActivity(intent);
+                String msg = "";
+                if (deleted)
+                {
+                    msg = "Appointment and Voice Recording Deleted";
+                }
+                else
+                {
+                    msg = "Appointment Deleted";
+                }
 
-                Toast.makeText(getActivity(), "Clicked OK", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
 
             }
         });
 
         // Add text for a negative button
-        theDialog.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+        theDialog.setNegativeButton("Edit", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
 
-                Toast.makeText(getActivity(), "Clicked Cancel", Toast.LENGTH_SHORT).show();
+                Intent editApp = new Intent(getContext(), AppointmentEditor.class);
+                editApp.putExtra("foundIndexText", foundIndexText);
+                startActivity(editApp);
+//                Toast.makeText(getActivity(), "Clicked Cancel", Toast.LENGTH_SHORT).show();
 
             }
         });

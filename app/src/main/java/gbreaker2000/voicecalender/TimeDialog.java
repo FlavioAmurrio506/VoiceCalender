@@ -9,6 +9,8 @@ import android.widget.TimePicker;
 import android.app.Dialog;
 import android.app.TimePickerDialog;;
 
+// TimePicker Fragment
+
 public class TimeDialog extends DialogFragment implements TimePickerDialog.OnTimeSetListener {
     private static EditText appointment_end;
     public static TimeDialog newInstance(View view){

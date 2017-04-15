@@ -2,6 +2,7 @@ package gbreaker2000.voicecalender;
 
 import android.app.AlarmManager;
 import android.app.AppOpsManager;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -12,6 +13,8 @@ import android.os.Environment;
 import android.os.Vibrator;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -24,6 +27,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+// This is the screen that displays the alarm information
 
 public class AlarmReminderScreen extends AppCompatActivity {
 
@@ -50,150 +55,121 @@ public class AlarmReminderScreen extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_alarm_reminder_screen);
+//        setContentView(R.layout.activity_alarm_reminder_screen);
 
         Appointment found = alarmRinger();
-
-        alarm_info = (TextView)findViewById(R.id.alarm_info);
-        ars_play_buttton = (FloatingActionButton)findViewById(R.id.ars_play_buttton);
-        StringBuilder sb = new StringBuilder();
-        playDrawable = getResources().getDrawable(R.drawable.alpha_play);
-        stopDrawable = getResources().getDrawable(R.drawable.alpha_stop);
-        alarmSound = MediaPlayer.create(this, R.raw.morning);
-
-//        FileIO read = new FileIO();
-//
-//      looker= new ArrayList<>();
-//        looker.clear();
-        //       looker.addAll(read.FileInput());
+        Date today = new Date(System.currentTimeMillis());
+        long t = (today.getMinutes() * 60 * 1000) + (today.getHours() * 60 * 60 * 1000);
 
 
-
-
- /*       for (int i = 0; i<looker.size(); i++)
+        if (FileIO.notificationTime() == t)
         {
-            looker.get(i).setMilliSec();
-            if(looker.get(i).getMilliTime()>System.currentTimeMillis())
+            alarmSound = MediaPlayer.create(this, R.raw.noti);
+            alarmSound.start();
+            String[] events = {"No Events"};
+
+            int month = today.getMonth() + 1;
+            int day = today.getDate();
+            int year = today.getYear() + 1900;
+            List<Appointment> dayApt = Appointment.DayAppointments(month + "/" + day + "/" + year);
+
+            String msg = "No Appointment";
+
+            StringBuilder sb = new StringBuilder();
+            if (dayApt.size() == 0)
             {
-                indexOfItem = i;
-                break;
+                sb.append("No Data");
+
             }
-        }
-        indexOfItem--;
-        if(indexOfItem<0)
-        {
-            indexOfItem = 0;
-        }
-*/
-//        if(found.equals(looker.get(indexOfItem)))
-//        {
-//            looker.set(indexOfItem, found);
-//        }
+            else
+            {
+                events = new String[dayApt.size()];
+                for(int i = 0; i<dayApt.size(); i++)
+                {
+//                    sb.append(dayApt.get(i).getTittle() + " " + dayApt.get(i).getStartTime() + "\n");
+                    events[i] = dayApt.get(i).getTittle() + " " + dayApt.get(i).getStartTime();
+                }
+                msg = "Today's Appointments";
+            }
 
-        /*try {
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+            builder.setSmallIcon(R.drawable.icon);
+            builder.setContentTitle("Voice Calendar");
+            builder.setContentText(msg);
+            Intent intent = new Intent(this, MainActivity.class);
+            // New Content
 
-            sb.append("Tittle: " + looker.get(indexOfItem).getTittle() + "\n");
-            sb.append("Date: " + looker.get(indexOfItem).getStartDate() + "\n");
-            sb.append("Time: " + looker.get(indexOfItem).getStartTime() + "\n");
-            sb.append("Location: " + looker.get(indexOfItem).getLocation() + "\n");
-            sb.append("Notes: " + looker.get(indexOfItem).getNotes() + "\n");
-            alarm_info.setText(sb.toString());
+            NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
+            inboxStyle.setBigContentTitle("Today Appoitments");
+
+            for (int i=0; i < events.length; i++) {
+
+                inboxStyle.addLine(events[i]);
+            }
+            builder.setStyle(inboxStyle);
+
+
+
+
+            TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+            stackBuilder.addParentStack(MainActivity.class);
+            stackBuilder.addNextIntent(intent);
+            PendingIntent pendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+            builder.setContentIntent(pendingIntent);
+            NotificationManager NM = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            NM.notify(0, builder.build());
+            setNextAlarm();
+            finish();
+//            Intent gotoMainPro = new Intent(this,MainActivity.class);
+//            startActivity(gotoMainPro);
+        } else {
+
+            if(found.getTittle().contains("Martin") || found.getTittle().contains("New Years"))
+            {
+                finish();
+            }
+//            super.onCreate(savedInstanceState);
+
+            setContentView(R.layout.activity_alarm_reminder_screen);
+
+
+            alarm_info = (TextView) findViewById(R.id.alarm_info);
+            ars_play_buttton = (FloatingActionButton) findViewById(R.id.ars_play_buttton);
+            StringBuilder sb = new StringBuilder();
+            playDrawable = getResources().getDrawable(R.drawable.alpha_play);
+            stopDrawable = getResources().getDrawable(R.drawable.alpha_stop);
+            alarmSound = MediaPlayer.create(this, R.raw.morning);
+
+            try {
+
+                sb.append("Tittle: " + found.getTittle() + "\n");
+                sb.append("Date: " + found.getStartDate() + "\n");
+                sb.append("Time: " + found.getStartTime() + "\n");
+                sb.append("Location: " + found.getLocation() + "\n");
+                sb.append("Notes: " + found.getNotes() + "\n");
+                alarm_info.setText(sb.toString());
 //            Toast.makeText(this, "" + looker.get(indexOfItem - 1).getTittle() + "", Toast.LENGTH_LONG).show();
-        }
+            } catch (Exception e) {
 
+            }
 
-        catch (Exception e)
-        {
+            alarmSound.start();
 
-        }*/
-        try {
-
-            sb.append("Tittle: " + found.getTittle() + "\n");
-            sb.append("Date: " + found.getStartDate() + "\n");
-            sb.append("Time: " + found.getStartTime() + "\n");
-            sb.append("Location: " + found.getLocation() + "\n");
-            sb.append("Notes: " + found.getNotes() + "\n");
-            alarm_info.setText(sb.toString());
-//            Toast.makeText(this, "" + looker.get(indexOfItem - 1).getTittle() + "", Toast.LENGTH_LONG).show();
-        }
-
-
-        catch (Exception e)
-        {
-
-        }
-
-        alarmSound.start();
-        //alarmSound = MediaPlayer.create(arg0,R.raw.morning);
-
-//        if(!looker.get(indexOfItem).isAllDay()) {
-//
-//            try {
-//                alarmSound.setDataSource(getAlarmPath());
-//                alarmSound.prepare();
-//                alarmSound.start();
-//
-//
-//            } catch (IOException e) {
-//                //Log.e(LOG_TAG, "prepare() failed");
-//            }
-          /*  looker.get(indexOfItem).setAllDay(true);
-            read.FileOutput(looker);*/
-
-//        }
-//        while(1==1)
-//        {
-//            if (!alarmSound.isPlaying())
-//            {
-//                alarmSound.release();
-//                break;
-//            }
-//        }
-
-
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
-//
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-
-
-        Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-        // Vibrate for 500 milliseconds
+            Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+            // Vibrate for 500 milliseconds
 //        v.vibrate(500);
 
 //        long[] pattern = {0, 100, 1000, 300, 200, 100, 500, 200, 100};
 
 // The '-1' here means to vibrate once, as '-1' is out of bounds in the pattern array
-        vibrator.vibrate(1000);
-//        long startAlarmTime = System.currentTimeMillis();
-//        long endAlarmTime = startAlarmTime + (30 * 1000);
-//
-//        while(System.currentTimeMillis()<endAlarmTime)
-//        {
-//            if(alarmSound.isPlaying())
-//            {
-//
-//            }
-//            else {
-//                vibrator.cancel();
-//            }
-//        }
+            vibrator.vibrate(1000);
 
-        if(found.getFileName().equals(""))
-        {
-            ars_play_buttton.setVisibility(View.GONE);
+            if (found.getFileName().equals("")) {
+                ars_play_buttton.setVisibility(View.GONE);
+            }
+            setNextAlarm();
+
         }
-        setNextAlarm();
-
     }
     public static void stopReceiver()
     {
@@ -209,15 +185,11 @@ public class AlarmReminderScreen extends AppCompatActivity {
         {
 
         }
-//        alarmSound.release();
-//        alarmSound = new MediaPlayer();
     }
 
     public void stopReceiver(View view) {
         stopReceiver();
         setNextAlarm();
-//        Intent intent = new Intent(AlarmReminderScreen.this,MainActivity.class);
-//        startActivity(intent);
     }
 
     public static String getAlarmPath()

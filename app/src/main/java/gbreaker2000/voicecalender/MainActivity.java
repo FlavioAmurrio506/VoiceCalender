@@ -16,6 +16,8 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -40,6 +42,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 
+// Main Activity View. Welcoming Screen
 public class MainActivity extends AppCompatActivity {
 
     //CalendarView calendar;
@@ -61,6 +64,8 @@ public class MainActivity extends AppCompatActivity {
     public static AlarmManager alarmManager;
     TextView upcoming_events;
     String maybe = "";
+//    TextView calendar_date_display;
+//    String monthTextView;--------------
 
     MediaPlayer mPlayer = new MediaPlayer();
     TextView listViewTittle = null;
@@ -76,17 +81,21 @@ public class MainActivity extends AppCompatActivity {
         rec_float_button = (FloatingActionButton)findViewById(R.id.rec_float_button);
         today_button = (FloatingActionButton)findViewById(R.id.today_button);
         add_float_Button = (FloatingActionButton)findViewById(R.id.add_float_button);
-        rec_float_button.setBackgroundTintList(ColorStateList.valueOf(0xff0000ff));
+         rec_float_button.setBackgroundTintList(ColorStateList.valueOf(0xff0000ff));
         today_button.setBackgroundTintList(ColorStateList.valueOf(0xff0000ff));
         add_float_Button.setBackgroundTintList(ColorStateList.valueOf(0xff0000ff));
         listViewTittle = (TextView)findViewById(R.id.listViewTittle);
+//--------------------        calendar_date_display = (TextView) findViewById(R.id.calendar_date_display);
+
+
+
         try
         {
             setNextAlarm();
         }
         catch (Exception e)
         {
-
+            Toast.makeText(this,"Notifailed",Toast.LENGTH_LONG).show();
         }
 
         StringBuilder sb = new StringBuilder();
@@ -124,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
 //        upcoming_events.setText(sb.toString());
 
 
-        HashSet<Date> events = new HashSet<>();
+        final HashSet<Date> events = new HashSet<>();
         events.add(new Date());
 //        Mainevents = new HashSet<Date>();
 //        Mainevents.addAll(events);
@@ -135,8 +144,8 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-        CalendarView cv = ((CalendarView)findViewById(R.id.calendar_view));
-        cv.updateCalendar(events);
+        final CalendarView cv = ((CalendarView)findViewById(R.id.calendar_view));
+        cv.updateCalendar(FileIO.HashInput());
         // assign event handler
         cv.setEventHandler(new CalendarView.EventHandler()
         {
@@ -159,12 +168,20 @@ public class MainActivity extends AppCompatActivity {
                 ArrayList<Appointment> selDayApt = new ArrayList<>();
                 selDayApt.addAll(Appointment.DayAppointments(maybe));
 
-                ListViewModifier(selDayApt);
+                try {
+                    ListViewModifier(selDayApt);
+                }
+                catch (Exception e)
+                {
+
+                }
 
 
 
             }
         });
+
+//       -------------------------------------- monthTextView = calendar_date_display.getText().toString();
 
 //         + "   " + year  df.format(date)month + "/" + day + "/" + year
 //        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -196,7 +213,30 @@ public class MainActivity extends AppCompatActivity {
 
 
         //--------New Stuff----
-        ListViewModifier((ArrayList<Appointment>) Appointment.UpComingAppointments());
+        try {
+//            ListViewModifier((ArrayList<Appointment>) Appointment.UpComingAppointments());
+
+            Date today = new Date(System.currentTimeMillis());
+            int month = today.getMonth() + 1;
+            int day = today.getDate();
+            int year = today.getYear() + 1900;
+            List<Appointment> dayApt = Appointment.DayAppointments(month + "/" + day + "/" + year);
+            if (dayApt.size()<1)
+            {
+                ListViewModifier((ArrayList<Appointment>) Appointment.UpComingAppointments());
+                listViewTittle.setText("Future Events");
+            }
+            else
+            {
+
+            ListViewModifier((ArrayList<Appointment>) dayApt);
+                listViewTittle.setText("Today's Appointments");
+            }
+        }
+        catch (Exception e)
+        {
+
+        }
 //        ListViewModifier((ArrayList<Appointment>) appdata);
 
 //        FileIO read = new FileIO();
@@ -221,9 +261,34 @@ public class MainActivity extends AppCompatActivity {
 //                playAudio(aptdata.get(i).getFileName());
 //            }
 //        });
+//        calendar_date_display.addTextChangedListener(new TextWatcher() {
+//            @Override
+//            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+//
+//
+//            }
+//
+//            @Override
+//            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+//                String a = calendar_date_display.getText().toString();
+//                if (!a.equals(monthTextView))
+//                {
+//                    cv.updateCalendar();
+//                }
+//
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable editable) {
+//
+//            }
+//        });
+
     }
 
-    public void ListViewModifier(final ArrayList<Appointment> tApt)
+
+
+    public void ListViewModifier(final ArrayList<Appointment> tApt) throws Exception
     {
         listViewTittle.setText(maybe);
         String[] aptArray = toArray(tApt);
@@ -234,6 +299,7 @@ public class MainActivity extends AppCompatActivity {
         final ListView smallTheListView = (ListView) findViewById(R.id.smallTheListView);
 
         smallTheListView.setAdapter(theAdapter);
+//        Toast.makeText(this."hello",Toast.LENGTH_LONG).show();
 
         smallTheListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -262,7 +328,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-            Toast.makeText(MainActivity.this,tApt.get(position).getTittle(),Toast.LENGTH_LONG).show();
+//            Toast.makeText(MainActivity.this,tApt.get(position).getTittle(),Toast.LENGTH_LONG).show();
             DialogFragment myFragment = MyDialogFragment.newInstance(tApt.get(position).getMilliTime());
 
             myFragment.show(getSupportFragmentManager(), "hello");
@@ -464,7 +530,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     // -------New Stuff-----
-    private static String[] toArray(ArrayList<Appointment> tempList)
+    private static String[] toArray(ArrayList<Appointment> tempList) throws Exception
     {
         String[] bar = new String[tempList.size()];
         for (int i = 0; i<tempList.size() ; i++)
@@ -536,6 +602,31 @@ public class MainActivity extends AppCompatActivity {
         alarms.clear();
         alarms.addAll(FileIO.AlarmSaveIn());
         alarms.add(targetCal);
+
+        List<Appointment> search = FileIO.FileInput();
+        int hour = 7;
+        int minute = 03;
+        for (int i = 0; i<search.size(); i++) {
+            if (search.get(i).getTittle().equals("NOTIFICATION ALERT")) {
+                String[] time = search.get(i).getStartTime().split(":");
+                hour = Integer.parseInt(time[0]);
+                minute = Integer.parseInt(time[1]);
+            }
+        }
+        Date tempdate = new Date(System.currentTimeMillis());
+
+        tempdate.setHours(hour);
+        tempdate.setMinutes(minute);
+        long noti = tempdate.getTime();
+        long notimod = noti;
+        alarms.add(noti);
+        for(int i = 0; i<1; i++)
+        {
+            notimod = notimod + (24*60*60*1000);
+//            tempdate.setDate(tempdate.getDay()+i);
+//            Toast.makeText(this,tempdate.toString(),Toast.LENGTH_SHORT).show();
+            alarms.add(notimod);
+        }
         FileIO.AlarmSaveOut(alarms);
         alarms.clear();
         alarms.addAll(FileIO.AlarmSaveIn());
@@ -544,10 +635,37 @@ public class MainActivity extends AppCompatActivity {
 //            info.setText("\n\n***\n"
 //                    + "Alarm is set@ " + targetCal.getTime() + "\n"
 //                    + "***\n");  getBaseContext()
-        Intent intent = new Intent(this, AlarmReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(getBaseContext(), RQS_1, intent, 0);
-        alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, alarms.get(0), pendingIntent);
+
+//        Toast.makeText(this,new Date(noti).toString(),Toast.LENGTH_LONG).show();
+//        Toast.makeText(this,new Date(alarms.get(0)).toString(),Toast.LENGTH_LONG).show();
+
+
+//        if(alarms.get(0) != noti) {
+//            Toast.makeText(this,"Alarm Set",Toast.LENGTH_SHORT).show();
+
+            Intent intent = new Intent(this, AlarmReceiver.class);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(getBaseContext(), RQS_1, intent, 0);
+            alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+            alarmManager.set(AlarmManager.RTC_WAKEUP, alarms.get(0), pendingIntent);
+//        }
+//        else
+//        {
+//
+//            Intent intent = new Intent(this, AlertReceiverNotification.class);
+//            PendingIntent pendingIntent = PendingIntent.getBroadcast(getBaseContext(), RQS_1, intent, 0);
+//            alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+//            alarmManager.set(AlarmManager.RTC_WAKEUP, alarms.get(0), pendingIntent);
+////            Toast.makeText(this,"Notification Set",Toast.LENGTH_SHORT).show();
+////            Intent alertIntent = new Intent(this, AlertReceiverNotification.class);
+////            AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+////            alarmManager.set(AlarmManager.RTC_WAKEUP, alarms.get(0),
+////                    PendingIntent.getBroadcast(this, 33, alertIntent,
+////                            PendingIntent.FLAG_UPDATE_CURRENT));
+//
+////            PendingIntent pendingIntent = PendingIntent.getBroadcast(getBaseContext(), RQS_1, alertIntent, 0);
+////            alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+////            alarmManager.set(AlarmManager.RTC_WAKEUP, alarms.get(0), pendingIntent);
+//        }
     }
 
 

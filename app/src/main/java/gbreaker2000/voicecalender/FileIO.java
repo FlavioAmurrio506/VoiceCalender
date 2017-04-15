@@ -18,6 +18,9 @@ import java.util.List;
 /**
  * Created by Flavi on 4/17/2016.
  */
+
+// File input/output class.
+
 public class FileIO {
     public static List<Appointment> FileInput()
     {
@@ -40,11 +43,31 @@ public class FileIO {
             //Catch exception if any
             System.err.println("Error: " + e.getMessage());
         }
+        int counter = 0;
+        for (int i = 0; i<inputData.size(); i++) {
+            if (inputData.get(i).getTittle().equals("NOTIFICATION ALERT")) {
+                try {
+                    inputData.get(i).setStartDate("01/01/2049");
+                }
+                catch (Exception e )
+                {
+
+                }
+                counter++;
+            }
+                if (counter==2)
+                {
+                    inputData.remove(i);
+                }
+
+            }
+
         Collections.sort(inputData);
+        FileOutput(inputData);
         return inputData;
     }//End FileInput Method
 
-    public static Appointment stringToAppointment(String data)
+    public static Appointment stringToAppointment(String data) throws Exception
     {
         String[] parts = data.split(",");
         Appointment tempApp = new Appointment();
@@ -134,14 +157,11 @@ public class FileIO {
         long curTime = System.currentTimeMillis();
         for(int i = 0; i<inputData.size(); i++)
         {
-            if(inputData.get(i)<curTime)
+            if(inputData.get(i) < curTime)
             {
                 inputData.remove(i);
             }
-            else if (inputData.get(i)>curTime)
-            {
-//                break;
-            }
+
         }
 
         if (inputData.size()<1)
@@ -184,6 +204,53 @@ public class FileIO {
         outputStream.close();// close the file
         //System.out.println("Those lines were written to " + fileName);
 
+    }
+
+    public static HashSet<Date> HashInput()
+    {
+        List<Appointment> inputData = new ArrayList<>();
+        HashSet<Date> hashOut= new HashSet<>();
+        hashOut.clear();
+        try
+        {
+            FileInputStream fstream = new FileInputStream(getFilePathData());
+            DataInputStream in = new DataInputStream(fstream);
+            BufferedReader br = new BufferedReader(new InputStreamReader(in));
+            String strLine;
+
+            while ((strLine = br.readLine()) != null)
+            {
+                inputData.add(stringToAppointment(strLine));
+            }
+        }
+
+        catch (Exception e)
+        {
+            //Catch exception if any
+            System.err.println("Error: " + e.getMessage());
+        }
+        Collections.sort(inputData);
+        for(int i = 0; i<inputData.size();i++)
+        {
+            hashOut.add(inputData.get(i).dateObjGet());
+        }
+        return hashOut;
+    }//End FileInput Method
+
+    public static long notificationTime()
+    {
+        List<Appointment> search = FileInput();
+        for (int i = 0; i<search.size(); i++)
+        {
+            if (search.get(i).getTittle().equals("NOTIFICATION ALERT"))
+            {
+                String[] time = search.get(i).getStartTime().split(":");
+                int hour = Integer.parseInt(time[0]);
+                int min = Integer.parseInt(time[1]);
+                return( (hour*60*60*1000) + (min*60*1000));
+            }
+        }
+        return -1;
     }
 
 

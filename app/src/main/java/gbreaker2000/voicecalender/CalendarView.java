@@ -25,9 +25,14 @@ import java.util.HashSet;
 /**
  * Created by Flavi on 4/22/2016.
  */
+
+// This handles the Calandar generator. IMPORTANT FILE, DONT MODIFIY
 public class CalendarView extends LinearLayout
 {
-//    public static HashSet<Date> please= new HashSet<>();
+    public Date today = new Date();
+    public Date actualToday = new Date();
+
+    //    public static HashSet<Date> please= new HashSet<>();
     // for logging
     private static final String LOGTAG = "Calendar View";
 
@@ -128,6 +133,10 @@ public class CalendarView extends LinearLayout
             @Override
             public void onClick(View v)
             {
+                int monthmod = today.getMonth();
+                today.setMonth(monthmod+1);
+//                int daymod = today.getDate();
+                today.setDate(2);
                 currentDate.add(Calendar.MONTH, 1);
                 updateCalendar();
 //                updateCalendar(MainActivity.Mainevents);
@@ -140,6 +149,11 @@ public class CalendarView extends LinearLayout
             @Override
             public void onClick(View v)
             {
+
+                int monthmod = today.getMonth();
+                today.setMonth(monthmod-1);
+//                int daymod = today.getDate();
+                today.setDate(2);
                 currentDate.add(Calendar.MONTH, -1);
                 updateCalendar();
 //                updateCalendar(MainActivity.Mainevents);
@@ -168,7 +182,7 @@ public class CalendarView extends LinearLayout
      */
     public void updateCalendar()
     {
-        updateCalendar(null);
+        updateCalendar(FileIO.HashInput());
     }
 
     /**
@@ -214,6 +228,8 @@ public class CalendarView extends LinearLayout
         // days with events
         public HashSet<Date> eventDays;
 
+//        public Date today = new Date();
+
         // for view inflation
         private LayoutInflater inflater;
 
@@ -236,7 +252,8 @@ public class CalendarView extends LinearLayout
             int year = date.getYear();
 
             // today
-            Date today = new Date();
+//            Date today =
+
 
             // inflate item if it does not exist yet
             if (view == null)
@@ -273,7 +290,7 @@ public class CalendarView extends LinearLayout
                 // if this day is outside current month, grey it out
                 ((TextView)view).setTextColor(getResources().getColor(R.color.greyed_out));
             }
-            else if (day == today.getDate())
+            else if (day == actualToday.getDate()&&month==actualToday.getMonth())
             {
                 // if it is today, set it to blue/bold
                 ((TextView)view).setTypeface(null, Typeface.BOLD);
